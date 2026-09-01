@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://swarmroute-sih26123.su6u.chatgpt.site'),
   title: 'SwarmRoute — SIH26123 Research & Solution',
   description: 'A research-backed distributed edge coordination architecture for warehouse AMRs, with an interactive failure-mode simulator and hackathon build plan.',
   openGraph: {

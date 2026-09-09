@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "name": "three-robot-intersection",
+  "seed": 7,
+  "map": {
+    "version": "intersection-v1",
+    "width": 9,
+    "height": 5,
+    "blocked": [
+      [0, 0], [1, 0], [2, 0], [3, 0], [5, 0], [6, 0], [7, 0], [8, 0],
+      [0, 1], [1, 1], [2, 1], [3, 1], [5, 1], [6, 1], [7, 1], [8, 1],
+      [0, 3], [1, 3], [2, 3], [3, 3], [5, 3], [6, 3], [7, 3], [8, 3],
+      [0, 4], [1, 4], [2, 4], [3, 4], [5, 4], [6, 4], [7, 4], [8, 4]
+    ]
+  },
+  "robots": [
+    {"id": "R1", "cell": [0, 2], "battery_soc": 0.82, "completed_tasks": 4},
+    {"id": "R2", "cell": [4, 4], "battery_soc": 0.68, "completed_tasks": 1},
+    {"id": "R3", "cell": [8, 2], "battery_soc": 0.91, "completed_tasks": 3}
+  ],
+  "tasks": [
+    {
+      "id": "T-100",
+      "pickup": [4, 2],
+      "dropoff": [7, 2],
+      "release_tick": 0,
+      "deadline_tick": 30,
+      "payload_kg": 600,
+      "service_ticks": 1
+    }
+  ]
+}
+

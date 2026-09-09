@@ -1,0 +1,31 @@
+- ros_topic_name: /clock
+  gz_topic_name: /clock
+  ros_type_name: rosgraph_msgs/msg/Clock
+  gz_type_name: gz.msgs.Clock
+  direction: GZ_TO_ROS
+  qos_profile: CLOCK
+
+- {ros_topic_name: /robot_01/cmd_vel, gz_topic_name: /model/robot_01/cmd_vel, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}
+- {ros_topic_name: /robot_01/odometry, gz_topic_name: /model/robot_01/odometry, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+- {ros_topic_name: /robot_02/cmd_vel, gz_topic_name: /model/robot_02/cmd_vel, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}
+- {ros_topic_name: /robot_02/odometry, gz_topic_name: /model/robot_02/odometry, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+- {ros_topic_name: /robot_03/cmd_vel, gz_topic_name: /model/robot_03/cmd_vel, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}
+- {ros_topic_name: /robot_03/odometry, gz_topic_name: /model/robot_03/odometry, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+- {ros_topic_name: /robot_04/cmd_vel, gz_topic_name: /model/robot_04/cmd_vel, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}
+- {ros_topic_name: /robot_04/odometry, gz_topic_name: /model/robot_04/odometry, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+- {ros_topic_name: /robot_05/cmd_vel, gz_topic_name: /model/robot_05/cmd_vel, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}
+- {ros_topic_name: /robot_05/odometry, gz_topic_name: /model/robot_05/odometry, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+- {ros_topic_name: /robot_06/cmd_vel, gz_topic_name: /model/robot_06/cmd_vel, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}
+- {ros_topic_name: /robot_06/odometry, gz_topic_name: /model/robot_06/odometry, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+- {ros_topic_name: /robot_07/cmd_vel, gz_topic_name: /model/robot_07/cmd_vel, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}
+- {ros_topic_name: /robot_07/odometry, gz_topic_name: /model/robot_07/odometry, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+- {ros_topic_name: /robot_08/cmd_vel, gz_topic_name: /model/robot_08/cmd_vel, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}
+- {ros_topic_name: /robot_08/odometry, gz_topic_name: /model/robot_08/odometry, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+- {ros_topic_name: /robot_09/cmd_vel, gz_topic_name: /model/robot_09/cmd_vel, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}
+- {ros_topic_name: /robot_09/odometry, gz_topic_name: /model/robot_09/odometry, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+- {ros_topic_name: /robot_10/cmd_vel, gz_topic_name: /model/robot_10/cmd_vel, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}
+- {ros_topic_name: /robot_10/odometry, gz_topic_name: /model/robot_10/odometry, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+- {ros_topic_name: /robot_11/cmd_vel, gz_topic_name: /model/robot_11/cmd_vel, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}
+- {ros_topic_name: /robot_11/odometry, gz_topic_name: /model/robot_11/odometry, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+- {ros_topic_name: /robot_12/cmd_vel, gz_topic_name: /model/robot_12/cmd_vel, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}
+- {ros_topic_name: /robot_12/odometry, gz_topic_name: /model/robot_12/odometry, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}

@@ -1,38 +1,88 @@
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+build/
+dist/
+/presentation/node_modules/
+/presentation/dist/
 
-# testing
-/coverage
-
-# next.js
-/.next/
-/.vinext/
-/out/
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# local environment
-.env*
-
-# deployment and generated files
-.vercel
-next-env.d.ts
-/dist/
-/.wrangler/
+# Generated experiment and report output
 /outputs/
 /work/
+/output/
+/logs/
+/tmp/
+*.log
+
+# Local screenshots, previews, and cinematic render products
+/hero_*.png
+/simulation/previews/
+/simulation/cinematics/hero/output/
+*.blend1
+*.blend2
+
+# Downloaded research corpora and reproducible review intermediates
+/research/corpus/raw/
+/research/deep-audit-*/
+/research/deep-review-*/
+/research/presenter-whitepaper-*/
+/research/verified-industry-presentations/
+/research/report-source.md
+
+# ROS 2 / colcon
+simulation/ros2_ws/build/
+simulation/ros2_ws/install/
+simulation/ros2_ws/log/
+
+# Local environment and editor files
+.env*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.codex/
+.agents/
+*.swp
+*.swo
+*~
+*.pem
+/research/
+/team/
+
+# --- Redundant / derived presentation assets (verified unreferenced by the app) ---
+# Rendered previews of SVGs that live next to them; regenerate with the
+# generate-diagrams.mjs / generate-prototypes.mjs scripts in each folder.
+/presentation/assets/**/*.png
+/presentation/assets/**/preview/
+
+# Zip bundles of SVGs already stored uncompressed alongside them.
+/presentation/assets/**/*.zip
+
+# Unzipped copy of the sibling asset folders (byte-for-byte duplicate).
+/presentation/assets/presentation/
+
+# Duplicate of formulas/swarmroute-bid-formula*.svg.
+/presentation/assets/formulas/swarmroute-formula-svgs/
+
+# Orphaned browser traces from the retired 10-scenario demo. manifest.json
+# only loads peer-network, conflict-resolution and task-rerouting; regenerate
+# any trace with presentation/tools/generate_traces.py.
+/presentation/public/data/normal.json
+/presentation/public/data/peak-rush.json
+/presentation/public/data/low-battery.json
+/presentation/public/data/robot-failure.json
+/presentation/public/data/priority-order.json
+/presentation/public/data/blocked-aisle.json
+
+# Empty local scratch directories.
+/benchmark/
+/benchmark-finalcclear/

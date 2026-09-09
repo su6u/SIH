@@ -1,0 +1,11 @@
+**
+!simulator/
+!simulator/**
+!simulation/
+!simulation/**
+
+**/__pycache__/
+**/*.pyc
+simulation/ros2_ws/build/
+simulation/ros2_ws/install/
+simulation/ros2_ws/log/

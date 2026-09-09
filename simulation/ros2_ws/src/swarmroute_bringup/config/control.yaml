@@ -1,0 +1,11 @@
+/**:
+  ros__parameters:
+    use_sim_time: true
+    control_rate_hz: 30.0
+    max_linear_speed: 0.75
+    max_angular_speed: 1.5
+    max_linear_acceleration: 0.8
+    max_angular_acceleration: 2.5
+    position_tolerance: 0.08
+    rotate_first_threshold: 0.45
+    odometry_timeout_seconds: 0.2

@@ -1,0 +1,65 @@
+{
+  "fulfillment_rack": {
+    "triangles": 231024,
+    "materials": 9,
+    "collision": [
+      8.45,
+      2.6,
+      6.45
+    ]
+  },
+  "inventory_pod": {
+    "triangles": 10220,
+    "materials": 5,
+    "collision": [
+      1.4,
+      1.4,
+      3.05
+    ]
+  },
+  "roller_conveyor": {
+    "triangles": 23428,
+    "materials": 7,
+    "collision": [
+      6.1,
+      1.95,
+      1.2
+    ]
+  },
+  "packing_bench": {
+    "triangles": 4188,
+    "materials": 8,
+    "collision": [
+      2.2,
+      1.3,
+      2.05
+    ]
+  },
+  "roll_cage": {
+    "triangles": 5876,
+    "materials": 5,
+    "collision": [
+      1.5,
+      1.3,
+      1.9
+    ]
+  },
+  "charge_dock": {
+    "triangles": 2240,
+    "materials": 5,
+    "collision": [
+      0.7,
+      0.6,
+      1.2
+    ]
+  },
+  "pallet_jack": {
+    "triangles": 2464,
+    "materials": 2,
+    "collision": [
+      2.9,
+      0.85,
+      1.25
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "name": "warehouse-12-amr",
+  "seed": 20260904,
+  "map": {
+    "width": 21,
+    "height": 13,
+    "version": "warehouse-racks-v1",
+    "blocked": [],
+    "blocked_rectangles": [
+      [2, 2, 4, 4], [6, 2, 8, 4], [12, 2, 14, 4], [16, 2, 18, 4],
+      [2, 8, 4, 10], [6, 8, 8, 10], [12, 8, 14, 10], [16, 8, 18, 10]
+    ]
+  },
+  "conflict_zones": [
+    {"id": "central-crossing", "cells": [[10, 6]], "lease_ttl_ticks": 3},
+    {"id": "west-crossing", "cells": [[5, 6]], "lease_ttl_ticks": 3},
+    {"id": "east-crossing", "cells": [[15, 6]], "lease_ttl_ticks": 3}
+  ],
+  "robots": [
+    {"id": "robot_01", "cell": [0, 0], "battery_soc": 0.96},
+    {"id": "robot_02", "cell": [5, 0], "battery_soc": 0.91},
+    {"id": "robot_03", "cell": [10, 0], "battery_soc": 0.88},
+    {"id": "robot_04", "cell": [15, 0], "battery_soc": 0.94},
+    {"id": "robot_05", "cell": [20, 0], "battery_soc": 0.86},
+    {"id": "robot_06", "cell": [0, 6], "battery_soc": 0.93},
+    {"id": "robot_07", "cell": [20, 6], "battery_soc": 0.89},
+    {"id": "robot_08", "cell": [0, 12], "battery_soc": 0.97},
+    {"id": "robot_09", "cell": [5, 12], "battery_soc": 0.84},
+    {"id": "robot_10", "cell": [10, 12], "battery_soc": 0.95},
+    {"id": "robot_11", "cell": [15, 12], "battery_soc": 0.90},
+    {"id": "robot_12", "cell": [20, 12], "battery_soc": 0.92}
+  ],
+  "tasks": [
+    {"id": "order_001", "pickup": [1, 2], "dropoff": [19, 10], "release_tick": 0, "deadline_tick": 100, "payload_kg": 320, "service_ticks": 2},
+    {"id": "order_002", "pickup": [5, 3], "dropoff": [15, 9], "release_tick": 0, "deadline_tick": 100, "payload_kg": 480, "service_ticks": 2},
+    {"id": "order_003", "pickup": [9, 2], "dropoff": [11, 10], "release_tick": 0, "deadline_tick": 90, "payload_kg": 210, "service_ticks": 2},
+    {"id": "order_004", "pickup": [15, 3], "dropoff": [5, 9], "release_tick": 0, "deadline_tick": 110, "payload_kg": 650, "service_ticks": 3},
+    {"id": "order_005", "pickup": [19, 2], "dropoff": [1, 10], "release_tick": 0, "deadline_tick": 110, "payload_kg": 390, "service_ticks": 2},
+    {"id": "order_006", "pickup": [1, 4], "dropoff": [19, 8], "release_tick": 4, "deadline_tick": 115, "payload_kg": 720, "service_ticks": 3},
+    {"id": "order_007", "pickup": [5, 4], "dropoff": [15, 8], "release_tick": 4, "deadline_tick": 105, "payload_kg": 180, "service_ticks": 1},
+    {"id": "order_008", "pickup": [11, 4], "dropoff": [9, 8], "release_tick": 4, "deadline_tick": 95, "payload_kg": 260, "service_ticks": 2},
+    {"id": "order_009", "pickup": [19, 4], "dropoff": [5, 8], "release_tick": 8, "deadline_tick": 120, "payload_kg": 540, "service_ticks": 2},
+    {"id": "order_010", "pickup": [1, 8], "dropoff": [19, 4], "release_tick": 8, "deadline_tick": 125, "payload_kg": 430, "service_ticks": 2},
+    {"id": "order_011", "pickup": [5, 8], "dropoff": [15, 4], "release_tick": 8, "deadline_tick": 115, "payload_kg": 810, "service_ticks": 3},
+    {"id": "order_012", "pickup": [9, 8], "dropoff": [11, 4], "release_tick": 12, "deadline_tick": 110, "payload_kg": 150, "service_ticks": 1},
+    {"id": "order_013", "pickup": [15, 8], "dropoff": [5, 4], "release_tick": 12, "deadline_tick": 130, "payload_kg": 360, "service_ticks": 2},
+    {"id": "order_014", "pickup": [19, 8], "dropoff": [1, 4], "release_tick": 12, "deadline_tick": 135, "payload_kg": 590, "service_ticks": 2},
+    {"id": "order_015", "pickup": [1, 10], "dropoff": [19, 2], "release_tick": 16, "deadline_tick": 140, "payload_kg": 470, "service_ticks": 2},
+    {"id": "order_016", "pickup": [5, 10], "dropoff": [15, 2], "release_tick": 16, "deadline_tick": 130, "payload_kg": 230, "service_ticks": 1},
+    {"id": "order_017", "pickup": [11, 10], "dropoff": [9, 2], "release_tick": 20, "deadline_tick": 125, "payload_kg": 680, "service_ticks": 3},
+    {"id": "order_018", "pickup": [15, 10], "dropoff": [5, 2], "release_tick": 20, "deadline_tick": 145, "payload_kg": 340, "service_ticks": 2},
+    {"id": "order_019", "pickup": [19, 10], "dropoff": [1, 2], "release_tick": 24, "deadline_tick": 150, "payload_kg": 770, "service_ticks": 3},
+    {"id": "order_020", "pickup": [9, 4], "dropoff": [11, 8], "release_tick": 28, "deadline_tick": 140, "payload_kg": 290, "service_ticks": 2}
+  ]
+}

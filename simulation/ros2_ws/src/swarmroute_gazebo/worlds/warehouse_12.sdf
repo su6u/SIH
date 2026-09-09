@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<sdf version="1.10">
+  <world name="swarmroute_warehouse">
+    <physics name="warehouse_physics" type="ignored">
+      <max_step_size>0.002</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors"><render_engine>ogre2</render_engine></plugin>
+
+    <gravity>0 0 -9.81</gravity>
+    <magnetic_field>5.5645e-6 22.8758e-6 -42.3884e-6</magnetic_field>
+    <scene><ambient>0.28 0.30 0.33 1</ambient><background>0.035 0.045 0.06 1</background><shadows>true</shadows><grid>false</grid></scene>
+    <light type="directional" name="daylight"><cast_shadows>true</cast_shadows><pose>0 0 18 0 0 0</pose><diffuse>0.72 0.76 0.82 1</diffuse><specular>0.32 0.34 0.38 1</specular><direction>-0.35 0.25 -0.9</direction></light>
+    <light type="point" name="highbay_sw"><pose>-11 -6 7 0 0 0</pose><diffuse>0.85 0.90 1 1</diffuse><specular>0.25 0.28 0.34 1</specular><attenuation><range>20</range><constant>0.7</constant><linear>0.03</linear><quadratic>0.005</quadratic></attenuation><cast_shadows>false</cast_shadows></light>
+    <light type="point" name="highbay_sc"><pose>0 -6 7 0 0 0</pose><diffuse>0.85 0.90 1 1</diffuse><specular>0.25 0.28 0.34 1</specular><attenuation><range>20</range><constant>0.7</constant><linear>0.03</linear><quadratic>0.005</quadratic></attenuation><cast_shadows>false</cast_shadows></light>
+    <light type="point" name="highbay_se"><pose>11 -6 7 0 0 0</pose><diffuse>0.85 0.90 1 1</diffuse><specular>0.25 0.28 0.34 1</specular><attenuation><range>20</range><constant>0.7</constant><linear>0.03</linear><quadratic>0.005</quadratic></attenuation><cast_shadows>false</cast_shadows></light>
+    <light type="point" name="highbay_nw"><pose>-11 6 7 0 0 0</pose><diffuse>0.85 0.90 1 1</diffuse><specular>0.25 0.28 0.34 1</specular><attenuation><range>20</range><constant>0.7</constant><linear>0.03</linear><quadratic>0.005</quadratic></attenuation><cast_shadows>false</cast_shadows></light>
+    <light type="point" name="highbay_nc"><pose>0 6 7 0 0 0</pose><diffuse>0.85 0.90 1 1</diffuse><specular>0.25 0.28 0.34 1</specular><attenuation><range>20</range><constant>0.7</constant><linear>0.03</linear><quadratic>0.005</quadratic></attenuation><cast_shadows>false</cast_shadows></light>
+    <light type="point" name="highbay_ne"><pose>11 6 7 0 0 0</pose><diffuse>0.85 0.90 1 1</diffuse><specular>0.25 0.28 0.34 1</specular><attenuation><range>20</range><constant>0.7</constant><linear>0.03</linear><quadratic>0.005</quadratic></attenuation><cast_shadows>false</cast_shadows></light>
+
+    <model name="warehouse_floor">
+      <static>true</static>
+      <link name="floor">
+        <collision name="collision"><geometry><box><size>36 24 0.12</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>36 24 0.12</size></box></geometry><material><ambient>0.24 0.255 0.27 1</ambient><diffuse>0.43 0.455 0.48 1</diffuse><specular>0.28 0.30 0.32 1</specular></material></visual>
+      </link>
+    </model>
+
+    <model name="north_wall"><static>true</static><pose>0 11.8 3.5 0 0 0</pose><link name="wall"><collision name="collision"><geometry><box><size>36 0.2 7</size></box></geometry></collision><visual name="visual"><geometry><box><size>36 0.2 7</size></box></geometry><material><ambient>0.34 0.36 0.39 1</ambient><diffuse>0.58 0.61 0.65 1</diffuse><specular>0.25 0.25 0.25 1</specular></material></visual></link></model>
+    <model name="south_safety_barrier"><static>true</static><pose>0 -11.8 0.14 0 0 0</pose><link name="barrier"><collision name="collision"><geometry><box><size>36 0.16 0.28</size></box></geometry></collision><visual name="visual"><geometry><box><size>36 0.16 0.28</size></box></geometry><material><ambient>0.75 0.35 0 1</ambient><diffuse>1 0.55 0.01 1</diffuse></material></visual></link></model>
+    <model name="east_wall"><static>true</static><pose>17.8 0 3.5 0 0 0</pose><link name="wall"><collision name="collision"><geometry><box><size>0.2 23.6 7</size></box></geometry></collision><visual name="visual"><geometry><box><size>0.2 23.6 7</size></box></geometry><material><ambient>0.34 0.36 0.39 1</ambient><diffuse>0.58 0.61 0.65 1</diffuse></material></visual></link></model>
+    <model name="west_wall"><static>true</static><pose>-17.8 0 3.5 0 0 0</pose><link name="wall"><collision name="collision"><geometry><box><size>0.2 23.6 7</size></box></geometry></collision><visual name="visual"><geometry><box><size>0.2 23.6 7</size></box></geometry><material><ambient>0.34 0.36 0.39 1</ambient><diffuse>0.58 0.61 0.65 1</diffuse></material></visual></link></model>
+
+    <model name="warehouse_details">
+      <static>true</static>
+      <link name="architecture">
+        <!-- Main AMR traffic aisle and pedestrian boundary markings. -->
+        <visual name="aisle_south"><pose>0 -2.35 0.071 0 0 0</pose><geometry><box><size>34 0.075 0.012</size></box></geometry><material><ambient>0.75 0.52 0.01 1</ambient><diffuse>1 0.76 0.02 1</diffuse><emissive>0.08 0.04 0 1</emissive></material></visual>
+        <visual name="aisle_north"><pose>0 2.35 0.071 0 0 0</pose><geometry><box><size>34 0.075 0.012</size></box></geometry><material><ambient>0.75 0.52 0.01 1</ambient><diffuse>1 0.76 0.02 1</diffuse><emissive>0.08 0.04 0 1</emissive></material></visual>
+        <visual name="pedestrian_lane"><pose>0 -10.35 0.07 0 0 0</pose><geometry><box><size>34 1.10 0.01</size></box></geometry><material><ambient>0.02 0.25 0.34 1</ambient><diffuse>0.03 0.43 0.56 1</diffuse></material></visual>
+        <visual name="pedestrian_border"><pose>0 -9.78 0.076 0 0 0</pose><geometry><box><size>34 0.07 0.014</size></box></geometry><material><ambient>0.92 0.92 0.88 1</ambient><diffuse>1 1 0.96 1</diffuse></material></visual>
+        <visual name="crosswalk_1"><pose>-1.5 -1.8 0.078 0 0 0</pose><geometry><box><size>0.55 1.0 0.015</size></box></geometry><material><ambient>0.9 0.9 0.86 1</ambient><diffuse>1 1 0.96 1</diffuse></material></visual>
+        <visual name="crosswalk_2"><pose>-0.6 -1.8 0.078 0 0 0</pose><geometry><box><size>0.55 1.0 0.015</size></box></geometry><material><ambient>0.9 0.9 0.86 1</ambient><diffuse>1 1 0.96 1</diffuse></material></visual>
+        <visual name="crosswalk_3"><pose>0.3 -1.8 0.078 0 0 0</pose><geometry><box><size>0.55 1.0 0.015</size></box></geometry><material><ambient>0.9 0.9 0.86 1</ambient><diffuse>1 1 0.96 1</diffuse></material></visual>
+        <visual name="crosswalk_4"><pose>1.2 -1.8 0.078 0 0 0</pose><geometry><box><size>0.55 1.0 0.015</size></box></geometry><material><ambient>0.9 0.9 0.86 1</ambient><diffuse>1 1 0.96 1</diffuse></material></visual>
+
+        <!-- Structural steel and open roof trusses preserve the overhead camera view. -->
+        <visual name="column_nw"><pose>-16.8 10.8 3.5 0 0 0</pose><geometry><box><size>0.28 0.28 7</size></box></geometry><material><ambient>0.11 0.13 0.16 1</ambient><diffuse>0.22 0.26 0.31 1</diffuse><specular>0.5 0.5 0.5 1</specular></material></visual>
+        <visual name="column_ne"><pose>16.8 10.8 3.5 0 0 0</pose><geometry><box><size>0.28 0.28 7</size></box></geometry><material><ambient>0.11 0.13 0.16 1</ambient><diffuse>0.22 0.26 0.31 1</diffuse><specular>0.5 0.5 0.5 1</specular></material></visual>
+        <visual name="column_sw"><pose>-16.8 -10.8 3.5 0 0 0</pose><geometry><box><size>0.28 0.28 7</size></box></geometry><material><ambient>0.11 0.13 0.16 1</ambient><diffuse>0.22 0.26 0.31 1</diffuse><specular>0.5 0.5 0.5 1</specular></material></visual>
+        <visual name="column_se"><pose>16.8 -10.8 3.5 0 0 0</pose><geometry><box><size>0.28 0.28 7</size></box></geometry><material><ambient>0.11 0.13 0.16 1</ambient><diffuse>0.22 0.26 0.31 1</diffuse><specular>0.5 0.5 0.5 1</specular></material></visual>
+        <visual name="beam_north"><pose>0 10.8 6.75 0 0 0</pose><geometry><box><size>34 0.24 0.28</size></box></geometry><material><ambient>0.10 0.12 0.15 1</ambient><diffuse>0.20 0.24 0.29 1</diffuse></material></visual>
+        <visual name="beam_south"><pose>0 -10.8 6.75 0 0 0</pose><geometry><box><size>34 0.24 0.28</size></box></geometry><material><ambient>0.10 0.12 0.15 1</ambient><diffuse>0.20 0.24 0.29 1</diffuse></material></visual>
+
+        <!-- Loading doors and illuminated headers on the back wall. -->
+        <visual name="dock_door_1"><pose>-11.5 11.68 2.35 0 0 0</pose><geometry><box><size>3.4 0.05 4.25</size></box></geometry><material><ambient>0.10 0.12 0.14 1</ambient><diffuse>0.22 0.25 0.28 1</diffuse><specular>0.35 0.35 0.35 1</specular></material></visual>
+        <visual name="dock_door_2"><pose>0 11.68 2.35 0 0 0</pose><geometry><box><size>3.4 0.05 4.25</size></box></geometry><material><ambient>0.10 0.12 0.14 1</ambient><diffuse>0.22 0.25 0.28 1</diffuse><specular>0.35 0.35 0.35 1</specular></material></visual>
+        <visual name="dock_door_3"><pose>11.5 11.68 2.35 0 0 0</pose><geometry><box><size>3.4 0.05 4.25</size></box></geometry><material><ambient>0.10 0.12 0.14 1</ambient><diffuse>0.22 0.25 0.28 1</diffuse><specular>0.35 0.35 0.35 1</specular></material></visual>
+        <visual name="dock_header_1"><pose>-11.5 11.62 4.75 0 0 0</pose><geometry><box><size>3.7 0.12 0.28</size></box></geometry><material><ambient>0.72 0.31 0 1</ambient><diffuse>1 0.52 0.01 1</diffuse></material></visual>
+        <visual name="dock_header_2"><pose>0 11.62 4.75 0 0 0</pose><geometry><box><size>3.7 0.12 0.28</size></box></geometry><material><ambient>0.72 0.31 0 1</ambient><diffuse>1 0.52 0.01 1</diffuse></material></visual>
+        <visual name="dock_header_3"><pose>11.5 11.62 4.75 0 0 0</pose><geometry><box><size>3.7 0.12 0.28</size></box></geometry><material><ambient>0.72 0.31 0 1</ambient><diffuse>1 0.52 0.01 1</diffuse></material></visual>
+
+        <!-- High-bay light fixtures. -->
+        <visual name="fixture_sw"><pose>-11 -6 6.95 0 0 0</pose><geometry><cylinder><radius>0.34</radius><length>0.10</length></cylinder></geometry><material><ambient>0.7 0.74 0.82 1</ambient><diffuse>0.9 0.94 1 1</diffuse><emissive>0.5 0.55 0.65 1</emissive></material></visual>
+        <visual name="fixture_sc"><pose>0 -6 6.95 0 0 0</pose><geometry><cylinder><radius>0.34</radius><length>0.10</length></cylinder></geometry><material><ambient>0.7 0.74 0.82 1</ambient><diffuse>0.9 0.94 1 1</diffuse><emissive>0.5 0.55 0.65 1</emissive></material></visual>
+        <visual name="fixture_se"><pose>11 -6 6.95 0 0 0</pose><geometry><cylinder><radius>0.34</radius><length>0.10</length></cylinder></geometry><material><ambient>0.7 0.74 0.82 1</ambient><diffuse>0.9 0.94 1 1</diffuse><emissive>0.5 0.55 0.65 1</emissive></material></visual>
+        <visual name="fixture_nw"><pose>-11 6 6.95 0 0 0</pose><geometry><cylinder><radius>0.34</radius><length>0.10</length></cylinder></geometry><material><ambient>0.7 0.74 0.82 1</ambient><diffuse>0.9 0.94 1 1</diffuse><emissive>0.5 0.55 0.65 1</emissive></material></visual>
+        <visual name="fixture_nc"><pose>0 6 6.95 0 0 0</pose><geometry><cylinder><radius>0.34</radius><length>0.10</length></cylinder></geometry><material><ambient>0.7 0.74 0.82 1</ambient><diffuse>0.9 0.94 1 1</diffuse><emissive>0.5 0.55 0.65 1</emissive></material></visual>
+        <visual name="fixture_ne"><pose>11 6 6.95 0 0 0</pose><geometry><cylinder><radius>0.34</radius><length>0.10</length></cylinder></geometry><material><ambient>0.7 0.74 0.82 1</ambient><diffuse>0.9 0.94 1 1</diffuse><emissive>0.5 0.55 0.65 1</emissive></material></visual>
+      </link>
+    </model>
+
+    <include><uri>model://swarmroute_rack</uri><name>rack_north_01</name><pose>-10.5 -4.5 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_rack</uri><name>rack_north_02</name><pose>-4.5 -4.5 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_rack</uri><name>rack_north_03</name><pose>4.5 -4.5 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_rack</uri><name>rack_north_04</name><pose>10.5 -4.5 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_rack</uri><name>rack_south_01</name><pose>-10.5 4.5 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_rack</uri><name>rack_south_02</name><pose>-4.5 4.5 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_rack</uri><name>rack_south_03</name><pose>4.5 4.5 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_rack</uri><name>rack_south_04</name><pose>10.5 4.5 0 0 0 0</pose></include>
+
+    <include><uri>model://swarmroute_amr</uri><name>robot_01</name><pose>-15 -9 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_amr</uri><name>robot_02</name><pose>-7.5 -9 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_amr</uri><name>robot_03</name><pose>0 -9 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_amr</uri><name>robot_04</name><pose>7.5 -9 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_amr</uri><name>robot_05</name><pose>15 -9 0 0 0 3.14159265359</pose></include>
+    <include><uri>model://swarmroute_amr</uri><name>robot_06</name><pose>-15 0 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_amr</uri><name>robot_07</name><pose>15 0 0 0 0 3.14159265359</pose></include>
+    <include><uri>model://swarmroute_amr</uri><name>robot_08</name><pose>-15 9 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_amr</uri><name>robot_09</name><pose>-7.5 9 0 0 0 0</pose></include>
+    <include><uri>model://swarmroute_amr</uri><name>robot_10</name><pose>0 9 0 0 0 3.14159265359</pose></include>
+    <include><uri>model://swarmroute_amr</uri><name>robot_11</name><pose>7.5 9 0 0 0 3.14159265359</pose></include>
+    <include><uri>model://swarmroute_amr</uri><name>robot_12</name><pose>15 9 0 0 0 3.14159265359</pose></include>
+  </world>
+</sdf>

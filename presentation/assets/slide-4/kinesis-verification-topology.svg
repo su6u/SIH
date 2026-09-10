@@ -1,0 +1,198 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600" role="img" aria-labelledby="title desc">
+  <title id="title">Kinesis verification topology</title>
+  <desc id="desc">A technical schematic traces task allocation, peer consistency, motion authority, and pending physical integration. Evidence probes sit above the control spine and fail-closed responses sit below it.</desc>
+  <defs>
+    <marker id="arrowInk" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#223248"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#2F9364"/>
+    </marker>
+    <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="8" stroke="#D48500" stroke-width="2" opacity="0.32"/>
+    </pattern>
+    <style>
+      text { font-family: Inter, Arial, sans-serif; fill: #223248; }
+      .kicker { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; }
+      .stage { font-size: 18px; font-weight: 800; letter-spacing: .2px; }
+      .body { font-size: 14px; font-weight: 600; fill: #64758A; }
+      .small { font-size: 12px; font-weight: 700; fill: #64758A; }
+      .micro { font-size: 10px; font-weight: 800; letter-spacing: .8px; }
+      .mono { font-family: "SFMono-Regular", Menlo, Consolas, monospace; }
+    </style>
+  </defs>
+
+  <!-- Orientation -->
+  <text x="58" y="35" class="kicker" fill="#64758A">TRACEABLE EVIDENCE PATH</text>
+  <line x1="254" y1="30" x2="1196" y2="30" stroke="#DDE4EB" stroke-width="2"/>
+  <text x="1220" y="35" class="kicker" fill="#D48500">FIELD EVIDENCE</text>
+  <line x1="1348" y1="30" x2="1542" y2="30" stroke="#D48500" stroke-width="2" stroke-dasharray="7 6"/>
+
+  <!-- Evidence probes -->
+  <g>
+    <line x1="290" y1="96" x2="290" y2="103" stroke="#F06432" stroke-width="2"/>
+    <line x1="290" y1="151" x2="290" y2="232" stroke="#F06432" stroke-width="2"/>
+    <line x1="267" y1="88" x2="313" y2="88" stroke="#F06432" stroke-width="2"/>
+    <rect x="282" y="80" width="16" height="16" fill="#FFFFFF" stroke="#F06432" stroke-width="3"/>
+    <text x="290" y="59" text-anchor="middle" class="kicker" fill="#F06432">REPOSITORY VERIFICATION</text>
+    <text x="290" y="119" text-anchor="middle" class="stage">119 / 119 tests</text>
+    <text x="290" y="142" text-anchor="middle" class="body">planner, auctions, identity, recovery</text>
+    <g transform="translate(233 166)">
+      <line x1="0" y1="25" x2="114" y2="25" stroke="#C9D3DF" stroke-width="1.5"/>
+      <rect x="5" y="11" width="8" height="14" fill="#F6B59D"/>
+      <rect x="21" y="7" width="8" height="18" fill="#F49A78"/>
+      <rect x="37" y="3" width="8" height="22" fill="#F17E53"/>
+      <rect x="53" y="0" width="8" height="25" fill="#F06432"/>
+      <rect x="69" y="5" width="8" height="20" fill="#F17E53"/>
+      <rect x="85" y="9" width="8" height="16" fill="#F49A78"/>
+      <rect x="101" y="13" width="8" height="12" fill="#F6B59D"/>
+    </g>
+  </g>
+
+  <g>
+    <line x1="670" y1="96" x2="670" y2="103" stroke="#A84CC6" stroke-width="2"/>
+    <line x1="670" y1="151" x2="670" y2="232" stroke="#A84CC6" stroke-width="2"/>
+    <line x1="647" y1="88" x2="693" y2="88" stroke="#A84CC6" stroke-width="2"/>
+    <rect x="662" y="80" width="16" height="16" fill="#FFFFFF" stroke="#A84CC6" stroke-width="3"/>
+    <text x="670" y="59" text-anchor="middle" class="kicker" fill="#A84CC6">DISTRIBUTED VERIFICATION</text>
+    <text x="670" y="119" text-anchor="middle" class="stage">Multi-process peers</text>
+    <text x="670" y="142" text-anchor="middle" class="body">UDP exchange, liveness, authority expiry</text>
+    <g transform="translate(620 165)" fill="#FFFFFF" stroke="#A84CC6" stroke-width="2">
+      <line x1="7" y1="10" x2="50" y2="0"/>
+      <line x1="7" y1="10" x2="36" y2="31"/>
+      <line x1="50" y1="0" x2="92" y2="13"/>
+      <line x1="36" y1="31" x2="92" y2="13"/>
+      <line x1="50" y1="0" x2="36" y2="31" opacity=".5"/>
+      <circle cx="7" cy="10" r="6"/>
+      <circle cx="50" cy="0" r="6"/>
+      <circle cx="36" cy="31" r="6"/>
+      <circle cx="92" cy="13" r="6"/>
+    </g>
+  </g>
+
+  <g>
+    <line x1="1050" y1="96" x2="1050" y2="103" stroke="#2F9364" stroke-width="2"/>
+    <line x1="1050" y1="151" x2="1050" y2="232" stroke="#2F9364" stroke-width="2"/>
+    <line x1="1027" y1="88" x2="1073" y2="88" stroke="#2F9364" stroke-width="2"/>
+    <rect x="1042" y="80" width="16" height="16" fill="#FFFFFF" stroke="#2F9364" stroke-width="3"/>
+    <text x="1050" y="59" text-anchor="middle" class="kicker" fill="#2F9364">SYSTEM DEMONSTRATION</text>
+    <text x="1050" y="119" text-anchor="middle" class="stage">ROS 2 + Gazebo path</text>
+    <text x="1050" y="142" text-anchor="middle" class="body">odometry, safety monitors, stop command</text>
+    <g transform="translate(1004 163)" fill="none" stroke="#2F9364" stroke-width="2">
+      <path d="M0 29 H92"/>
+      <path d="M8 25 V8 H35 V25"/>
+      <path d="M49 25 V16 H66 V25"/>
+      <path d="M72 25 V2 H86 V25"/>
+      <circle cx="20" cy="29" r="5" fill="#FFFFFF"/>
+      <circle cx="76" cy="29" r="5" fill="#FFFFFF"/>
+    </g>
+  </g>
+
+  <!-- Control spine -->
+  <text x="58" y="246" class="micro" fill="#64758A">TASK + MAP</text>
+  <line x1="58" y1="262" x2="251" y2="262" stroke="#223248" stroke-width="3" marker-end="url(#arrowInk)"/>
+
+  <line x1="309" y1="262" x2="631" y2="262" stroke="#223248" stroke-width="3" marker-end="url(#arrowInk)"/>
+  <line x1="689" y1="262" x2="1011" y2="262" stroke="#223248" stroke-width="3" marker-end="url(#arrowInk)"/>
+  <line x1="1069" y1="262" x2="1216" y2="262" stroke="#223248" stroke-width="3"/>
+  <line x1="1284" y1="262" x2="1450" y2="262" stroke="#D48500" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrowGreen)"/>
+
+  <!-- Open field switch -->
+  <circle cx="1226" cy="262" r="9" fill="#FFFFFF" stroke="#D48500" stroke-width="3"/>
+  <circle cx="1274" cy="262" r="9" fill="#FFFFFF" stroke="#D48500" stroke-width="3"/>
+  <line x1="1234" y1="258" x2="1261" y2="239" stroke="#D48500" stroke-width="3"/>
+  <text x="1250" y="218" text-anchor="middle" class="micro" fill="#D48500">OPEN UNTIL FIELD TESTS PASS</text>
+
+  <!-- Stage glyphs -->
+  <g transform="translate(290 262)">
+    <path d="M0 -22 L22 0 L0 22 L-22 0 Z" fill="#FFFFFF" stroke="#F06432" stroke-width="3"/>
+    <path d="M-9 2 L-2 9 L11 -8" fill="none" stroke="#F06432" stroke-width="3" stroke-linecap="square"/>
+  </g>
+  <g transform="translate(670 262)">
+    <path d="M0 -22 L22 0 L0 22 L-22 0 Z" fill="#FFFFFF" stroke="#A84CC6" stroke-width="3"/>
+    <circle cx="-8" cy="-4" r="3" fill="#A84CC6"/>
+    <circle cx="8" cy="-4" r="3" fill="#A84CC6"/>
+    <circle cx="0" cy="9" r="3" fill="#A84CC6"/>
+    <line x1="-6" y1="-2" x2="-1" y2="7" stroke="#A84CC6" stroke-width="1.8"/>
+    <line x1="6" y1="-2" x2="1" y2="7" stroke="#A84CC6" stroke-width="1.8"/>
+    <line x1="-5" y1="-4" x2="5" y2="-4" stroke="#A84CC6" stroke-width="1.8"/>
+  </g>
+  <g transform="translate(1050 262)">
+    <path d="M0 -22 L22 0 L0 22 L-22 0 Z" fill="#FFFFFF" stroke="#2F9364" stroke-width="3"/>
+    <line x1="-9" y1="0" x2="-2" y2="0" stroke="#2F9364" stroke-width="3"/>
+    <line x1="5" y1="0" x2="12" y2="0" stroke="#2F9364" stroke-width="3"/>
+    <line x1="-2" y1="7" x2="5" y2="-7" stroke="#2F9364" stroke-width="3"/>
+  </g>
+
+  <!-- Stage labels -->
+  <text x="290" y="312" text-anchor="middle" class="kicker" fill="#F06432">01  TASK ALLOCATION</text>
+  <text x="290" y="337" text-anchor="middle" class="stage">Deterministic bid</text>
+  <text x="290" y="359" text-anchor="middle" class="body">complete peer view required</text>
+
+  <text x="670" y="312" text-anchor="middle" class="kicker" fill="#A84CC6">02  PEER CONSISTENCY</text>
+  <text x="670" y="337" text-anchor="middle" class="stage">Authenticated record</text>
+  <text x="670" y="359" text-anchor="middle" class="body">membership epoch + replay rejection</text>
+
+  <text x="1050" y="312" text-anchor="middle" class="kicker" fill="#2F9364">03  MOTION AUTHORITY</text>
+  <text x="1050" y="337" text-anchor="middle" class="stage">Robot-local gate</text>
+  <text x="1050" y="359" text-anchor="middle" class="body">fresh odometry + peer authority</text>
+
+  <!-- Interface annotations -->
+  <text x="480" y="246" text-anchor="middle" class="micro" fill="#64758A">SIGNED BID + CLAIM</text>
+  <text x="860" y="246" text-anchor="middle" class="micro" fill="#64758A">TIMED ROUTE + AUTHORITY</text>
+  <text x="1142" y="246" text-anchor="middle" class="micro mono" fill="#64758A">cmd_vel / stop</text>
+
+  <!-- Physical fleet line icon -->
+  <g transform="translate(1464 221)" fill="none" stroke="#223248" stroke-width="2.5">
+    <path d="M12 31 L22 6 H76 L88 31 V55 H12 Z"/>
+    <path d="M28 6 V-3 H69 V6"/>
+    <line x1="37" y1="36" x2="65" y2="36" stroke="#2F9364" stroke-width="3"/>
+    <circle cx="29" cy="56" r="8" fill="#FFFFFF"/>
+    <circle cx="72" cy="56" r="8" fill="#FFFFFF"/>
+  </g>
+  <text x="1514" y="303" text-anchor="middle" class="kicker" fill="#D48500">PHYSICAL AMR</text>
+  <text x="1514" y="326" text-anchor="middle" class="small">target hardware</text>
+
+  <!-- Pending field evidence list -->
+  <rect x="1382" y="368" width="164" height="114" fill="url(#hatch)" stroke="#D48500" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="1398" y="391" class="micro" fill="#D48500">FIELD GATE</text>
+  <line x1="1398" y1="402" x2="1530" y2="402" stroke="#D48500" stroke-width="1"/>
+  <text x="1398" y="425" class="small">p95 device latency</text>
+  <text x="1398" y="447" class="small">packet-loss trials</text>
+  <text x="1398" y="469" class="small">physical corridor test</text>
+
+  <!-- Failure injection rail -->
+  <line x1="58" y1="426" x2="1312" y2="426" stroke="#C9D3DF" stroke-width="2"/>
+  <text x="58" y="410" class="kicker" fill="#223248">FAIL-CLOSED RESPONSES</text>
+
+  <line x1="290" y1="380" x2="290" y2="465" stroke="#F06432" stroke-width="2" stroke-dasharray="5 5"/>
+  <path d="M290 412 L304 426 L290 440 L276 426 Z" fill="#FFFFFF" stroke="#F06432" stroke-width="2.5"/>
+  <text x="290" y="485" text-anchor="middle" class="micro" fill="#F06432">PARTIAL BID VIEW</text>
+  <text x="290" y="507" text-anchor="middle" class="stage">CLAIM WITHHELD</text>
+
+  <line x1="670" y1="380" x2="670" y2="465" stroke="#A84CC6" stroke-width="2" stroke-dasharray="5 5"/>
+  <path d="M670 412 L684 426 L670 440 L656 426 Z" fill="#FFFFFF" stroke="#A84CC6" stroke-width="2.5"/>
+  <text x="670" y="485" text-anchor="middle" class="micro" fill="#A84CC6">OLD EPOCH / STALE AUTHORITY</text>
+  <text x="670" y="507" text-anchor="middle" class="stage">PEER FENCED</text>
+
+  <line x1="1050" y1="380" x2="1050" y2="465" stroke="#2F9364" stroke-width="2" stroke-dasharray="5 5"/>
+  <path d="M1050 412 L1064 426 L1050 440 L1036 426 Z" fill="#FFFFFF" stroke="#2F9364" stroke-width="2.5"/>
+  <text x="1050" y="485" text-anchor="middle" class="micro" fill="#2F9364">STALE ODOMETRY</text>
+  <text x="1050" y="507" text-anchor="middle" class="stage mono">cmd_vel = 0</text>
+
+  <!-- Safety authority endpoint -->
+  <line x1="1090" y1="426" x2="1301" y2="426" stroke="#2F9364" stroke-width="3" marker-end="url(#arrowGreen)"/>
+  <g transform="translate(1324 426)">
+    <circle r="20" fill="#FFFFFF" stroke="#2F9364" stroke-width="3"/>
+    <rect x="-7" y="-7" width="14" height="14" fill="#2F9364"/>
+  </g>
+  <text x="1324" y="467" text-anchor="middle" class="micro" fill="#2F9364">SAFE DEFAULT</text>
+
+  <!-- Footer key -->
+  <line x1="58" y1="559" x2="1542" y2="559" stroke="#E1E7ED" stroke-width="2"/>
+  <rect x="58" y="548" width="14" height="14" fill="#FFFFFF" stroke="#2F9364" stroke-width="2"/>
+  <text x="82" y="560" class="small">verified in the current prototype</text>
+  <line x1="328" y1="555" x2="365" y2="555" stroke="#D48500" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="377" y="560" class="small">requires target hardware or physical AMR evidence</text>
+  <text x="1542" y="560" text-anchor="end" class="micro" fill="#64758A">SOFTWARE PROOF  /  INTEGRATION PROOF  /  FIELD PROOF</text>
+</svg>

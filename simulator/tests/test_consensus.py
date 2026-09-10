@@ -2,10 +2,10 @@ from dataclasses import replace
 
 import pytest
 
-from swarmroute.allocation import Bid, BidComponents
-from swarmroute.consensus import AuctionProtocolError, AuctionReplica
-from swarmroute.network import DeterministicNetwork, NetworkConfig
-from swarmroute.protocol import MessageEnvelope
+from kinesis.allocation import Bid, BidComponents
+from kinesis.consensus import AuctionProtocolError, AuctionReplica
+from kinesis.network import DeterministicNetwork, NetworkConfig
+from kinesis.protocol import MessageEnvelope
 
 
 KEYS = {"R1": b"r1-test-key", "R2": b"r2-test-key", "R3": b"r3-test-key"}

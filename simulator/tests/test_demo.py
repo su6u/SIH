@@ -1,4 +1,4 @@
-from swarmroute.demo import run_consensus_demo, run_demo
+from kinesis.demo import run_consensus_demo, run_demo
 
 
 def test_demo_is_deterministic_and_commits_a_safe_winner() -> None:

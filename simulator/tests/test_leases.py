@@ -1,6 +1,6 @@
 import pytest
 
-from swarmroute.leases import LeaseError, ZoneLeaseRegistry, ZoneState
+from kinesis.leases import LeaseError, ZoneLeaseRegistry, ZoneState
 
 
 def test_expired_pre_entry_grant_can_be_reissued_with_higher_epoch() -> None:

@@ -1,8 +1,8 @@
 import json
 
-from swarmroute.domain import Cell, RobotState, Task
-from swarmroute.experiment import FleetExperiment
-from swarmroute.graph import WarehouseMap
+from kinesis.domain import Cell, RobotState, Task
+from kinesis.experiment import FleetExperiment
+from kinesis.graph import WarehouseMap
 
 
 def test_multi_task_experiment_is_reproducible_and_event_sourced() -> None:

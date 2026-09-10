@@ -8,11 +8,11 @@ from pathlib import Path
 
 REPOSITORY = Path(__file__).parents[2]
 SCENARIO = REPOSITORY / "simulator" / "scenarios" / "warehouse-12.json"
-GAZEBO = REPOSITORY / "simulation" / "ros2_ws" / "src" / "swarmroute_gazebo"
+GAZEBO = REPOSITORY / "simulation" / "ros2_ws" / "src" / "kinesis_gazebo"
 WORLD = GAZEBO / "worlds" / "warehouse_12.sdf"
-AMR = GAZEBO / "models" / "swarmroute_amr" / "model.sdf"
-AMR_MESH = GAZEBO / "models" / "swarmroute_amr" / "meshes" / "amr_shell.obj"
-RACK = GAZEBO / "models" / "swarmroute_rack" / "model.sdf"
+AMR = GAZEBO / "models" / "kinesis_amr" / "model.sdf"
+AMR_MESH = GAZEBO / "models" / "kinesis_amr" / "meshes" / "amr_shell.obj"
+RACK = GAZEBO / "models" / "kinesis_rack" / "model.sdf"
 
 
 class AssetContractTest(unittest.TestCase):
@@ -77,7 +77,7 @@ class AssetContractTest(unittest.TestCase):
         collision_box = root.find("./model/link/collision/geometry/box/size")
         mesh_uri = root.findtext("./model/link/visual/geometry/mesh/uri")
         self.assertIsNotNone(collision_box)
-        self.assertEqual(mesh_uri, "model://swarmroute_amr/meshes/amr_shell.obj")
+        self.assertEqual(mesh_uri, "model://kinesis_amr/meshes/amr_shell.obj")
         self.assertTrue(AMR_MESH.is_file())
         vertex_count = sum(
             line.startswith("v ")

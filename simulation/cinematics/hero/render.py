@@ -18,7 +18,7 @@ HERE=Path(__file__).resolve().parent
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('--blend',type=Path,default=HERE/'output/swarmroute-hero-40s.blend')
+    parser.add_argument('--blend',type=Path,default=HERE/'output/kinesis-hero-40s.blend')
     parser.add_argument('--output',type=Path)
     parser.add_argument('--preview',action='store_true')
     parser.add_argument('--format',choices=['EXR','PNG'],default='EXR',

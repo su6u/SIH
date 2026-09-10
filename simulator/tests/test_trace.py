@@ -1,9 +1,9 @@
-from swarmroute.domain import Cell, RobotState, Task
-from swarmroute.fleet import FleetSimulation, SimulationConfig
-from swarmroute.graph import WarehouseMap
-from swarmroute.operations import Intervention, InterventionKind
-from swarmroute.scenario import Scenario
-from swarmroute.trace import TraceMetadata, build_presentation_trace
+from kinesis.domain import Cell, RobotState, Task
+from kinesis.fleet import FleetSimulation, SimulationConfig
+from kinesis.graph import WarehouseMap
+from kinesis.operations import Intervention, InterventionKind
+from kinesis.scenario import Scenario
+from kinesis.trace import TraceMetadata, build_presentation_trace
 
 
 def test_presentation_trace_is_derived_from_authoritative_events() -> None:
@@ -33,7 +33,7 @@ def test_presentation_trace_is_derived_from_authoritative_events() -> None:
         interventions=(failure,),
     )
 
-    assert trace["evidence"]["source"] == "swarmroute.FleetSimulation"
+    assert trace["evidence"]["source"] == "kinesis.FleetSimulation"
     assert trace["summary"]["completed"] == 1
     assert trace["summary"]["conflicts"] == 0
     r1 = next(robot for robot in trace["robots"] if robot["id"] == "R1")

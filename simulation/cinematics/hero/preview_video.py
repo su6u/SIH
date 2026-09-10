@@ -24,12 +24,12 @@ def arguments() -> argparse.Namespace:
     parser.add_argument(
         "--blend",
         type=Path,
-        default=HERE / "output/swarmroute-hero-40s.blend",
+        default=HERE / "output/kinesis-hero-40s.blend",
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=HERE / "output/preview/swarmroute-playblast.mp4",
+        default=HERE / "output/preview/kinesis-playblast.mp4",
     )
     parser.add_argument("--width", type=int, default=960)
     parser.add_argument("--height", type=int, default=540)

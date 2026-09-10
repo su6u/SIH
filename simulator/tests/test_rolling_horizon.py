@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from swarmroute.domain import Cell, RobotState, Task
-from swarmroute.fleet import CoordinationPolicy, FleetSimulation, SimulationConfig
-from swarmroute.graph import WarehouseMap
-from swarmroute.scenario import load_scenario
+from kinesis.domain import Cell, RobotState, Task
+from kinesis.fleet import CoordinationPolicy, FleetSimulation, SimulationConfig
+from kinesis.graph import WarehouseMap
+from kinesis.scenario import load_scenario
 
 SCENARIO = Path(__file__).parents[1] / "scenarios" / "warehouse-12.json"
 

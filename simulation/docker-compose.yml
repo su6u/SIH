@@ -6,18 +6,18 @@ services:
     command:
       - ros2
       - launch
-      - swarmroute_bringup
+      - kinesis_bringup
       - warehouse_12.launch.py
-      - scenario:=/opt/swarmroute/simulator/scenarios/fulfillment-large-12.json
+      - scenario:=/opt/kinesis/simulator/scenarios/fulfillment-large-12.json
       - headless:=true
-      - state_directory:=/var/lib/swarmroute
+      - state_directory:=/var/lib/kinesis
     environment:
       ROS_DOMAIN_ID: "42"
     volumes:
-      - swarmroute-peer-state:/var/lib/swarmroute
+      - kinesis-peer-state:/var/lib/kinesis
     ports:
       - "127.0.0.1:9002:9002"
     init: true
 
 volumes:
-  swarmroute-peer-state:
+  kinesis-peer-state:

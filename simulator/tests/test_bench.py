@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import pytest
 
-from swarmroute.bench import measure_decision_latency
-from swarmroute.domain import Cell, RobotState, Task
-from swarmroute.fleet import SimulationConfig
-from swarmroute.graph import WarehouseMap
-from swarmroute.scenario import Scenario
+from kinesis.bench import measure_decision_latency
+from kinesis.domain import Cell, RobotState, Task
+from kinesis.fleet import SimulationConfig
+from kinesis.graph import WarehouseMap
+from kinesis.scenario import Scenario
 
 
 def _scenario() -> Scenario:

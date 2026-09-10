@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from swarmroute.durable import DurableStateError, JsonPeerStateStore
-from swarmroute.membership import MembershipError, MembershipState
+from kinesis.durable import DurableStateError, JsonPeerStateStore
+from kinesis.membership import MembershipError, MembershipState
 
 
 MEMBERS = {"R1": "B1", "R2": "B2", "R3": "B3"}

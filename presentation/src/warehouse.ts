@@ -140,7 +140,7 @@ export function createWarehouse(scene: THREE.Scene) {
     world.add(box("bench carton",[1.2,.9,1.05],[x-.9,1.5,49],material(0xc39466,.88),false));
     world.add(box("monitor",[.7,.75,.08],[x+1.1,1.65,48.7],material(0x172127,.26,.25),false));
   }
-  const entry=label("SWARMROUTE · FC—01",1024);entry.position.set(27,8,-11.65);entry.scale.set(18,2.25,1);world.add(entry);
+  const entry=label("KINESIS · FC—01",1024);entry.position.set(27,8,-11.65);entry.scale.set(18,2.25,1);world.add(entry);
 
   // Balanced practicals match the warm/neutral Blender grade. The previous
   // browser-only intensities clipped the mint enamel and made follow shots

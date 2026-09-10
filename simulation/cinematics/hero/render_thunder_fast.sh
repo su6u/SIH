@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Five-hour presentation path. One independent Blender worker is started per GPU,
 # because animation frames do not depend on one another.
-PROJECT_DIR="${SWARM_PROJECT_DIR:-/home/ubuntu/swarmroute-render}"
+PROJECT_DIR="${SWARM_PROJECT_DIR:-/home/ubuntu/kinesis-render}"
 BLENDER_BIN="${SWARM_BLENDER_BIN:-$(command -v blender || true)}"
 OUTPUT_DIR="${SWARM_OUTPUT_DIR:-$PROJECT_DIR/frames-1080p24}"
 SAMPLES="${SWARM_SAMPLES:-96}"
@@ -14,7 +14,7 @@ if [[ -z "$BLENDER_BIN" || ! -x "$BLENDER_BIN" ]]; then
   echo "Set SWARM_BLENDER_BIN to a working Blender 4.2 executable" >&2
   exit 2
 fi
-if [[ ! -f "$PROJECT_DIR/swarmroute-hero-40s.blend" || ! -f "$PROJECT_DIR/render.py" ]]; then
+if [[ ! -f "$PROJECT_DIR/kinesis-hero-40s.blend" || ! -f "$PROJECT_DIR/render.py" ]]; then
   echo "Missing blend or render.py in $PROJECT_DIR" >&2
   exit 2
 fi
@@ -37,7 +37,7 @@ for ((gpu=0; gpu<GPU_COUNT; gpu++)); do
   CUDA_VISIBLE_DEVICES="$gpu" "$BLENDER_BIN" \
     --background --factory-startup --python-exit-code 1 \
     --python "$PROJECT_DIR/render.py" -- \
-    --blend "$PROJECT_DIR/swarmroute-hero-40s.blend" \
+    --blend "$PROJECT_DIR/kinesis-hero-40s.blend" \
     --device OPTIX --format PNG --resolution 1080p \
     --samples "$SAMPLES" --adaptive-threshold .01 --time-limit "$TIME_LIMIT" \
     --output-fps 24 --start "$start" --end "$end" --output "$OUTPUT_DIR" \

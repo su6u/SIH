@@ -20,7 +20,7 @@ jobs:
           cache-dependency-path: simulator/pyproject.toml
       - run: python -m pip install ./simulator[dev]
       - run: make test
-      - run: python -m swarmroute simulate simulator/scenarios/warehouse-12.json --max-ticks 180 --compact
+      - run: python -m kinesis simulate simulator/scenarios/warehouse-12.json --max-ticks 180 --compact
 
   ros-image:
     runs-on: ubuntu-24.04

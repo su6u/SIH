@@ -9,7 +9,7 @@ import unittest
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
-GAZEBO = ROOT / "simulation/ros2_ws/src/swarmroute_gazebo"
+GAZEBO = ROOT / "simulation/ros2_ws/src/kinesis_gazebo"
 WORLD = GAZEBO / "worlds/warehouse_fulfillment.sdf"
 CONTRACT = GAZEBO / "config/fulfillment_contract.json"
 SCENARIO = ROOT / "simulator/scenarios/fulfillment-large-12.json"
@@ -99,11 +99,11 @@ class FulfillmentContractTest(unittest.TestCase):
         glass = self.world.findall("./model/link/visual[@name='glass_0']")
         self.assertEqual(len(glass), 1)
         self.assertAlmostEqual(float(glass[0].findtext("transparency")), 0.82)
-        robot = ET.parse(GAZEBO / "models/swarmroute_amr/model.sdf")
+        robot = ET.parse(GAZEBO / "models/kinesis_amr/model.sdf")
         self.assertIsNotNone(robot.find(".//visual[@name='front_sensor_window']"))
 
     def test_all_external_meshes_resolve_locally(self):
-        kinds = {i["kind"] for i in self.contract["instances"]} | {"swarmroute_amr"}
+        kinds = {i["kind"] for i in self.contract["instances"]} | {"kinesis_amr"}
         for kind in kinds:
             model = ET.parse(GAZEBO / "models" / kind / "model.sdf")
             for uri in model.findall(".//mesh/uri"):

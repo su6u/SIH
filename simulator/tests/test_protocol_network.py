@@ -2,8 +2,8 @@ from dataclasses import replace
 
 import pytest
 
-from swarmroute.network import DeterministicNetwork, NetworkConfig, NetworkEventKind
-from swarmroute.protocol import MessageEnvelope, MessageRejected, ReplayGuard
+from kinesis.network import DeterministicNetwork, NetworkConfig, NetworkEventKind
+from kinesis.protocol import MessageEnvelope, MessageRejected, ReplayGuard
 
 
 KEYS = {"R1": b"r1-test-key"}

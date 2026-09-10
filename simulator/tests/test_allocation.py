@@ -2,12 +2,12 @@ from dataclasses import replace
 
 import pytest
 
-from swarmroute.allocation import Bid, BidComponents, Bidder, select_winner
-from swarmroute.domain import Cell, RobotState, Task
-from swarmroute.graph import WarehouseMap
-from swarmroute.physics import MotionConfig
-from swarmroute.planner import SpaceTimeAStar
-from swarmroute.reservations import ReservationTable
+from kinesis.allocation import Bid, BidComponents, Bidder, select_winner
+from kinesis.domain import Cell, RobotState, Task
+from kinesis.graph import WarehouseMap
+from kinesis.physics import MotionConfig
+from kinesis.planner import SpaceTimeAStar
+from kinesis.reservations import ReservationTable
 
 
 def _bid(robot_id: str, score: float, workload: int, *, feasible: bool = True) -> Bid:

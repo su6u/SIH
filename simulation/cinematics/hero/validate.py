@@ -5,7 +5,7 @@ from pathlib import Path
 from motion import BODY_RADIUS, SHOTS, build_tracks, camera_pose
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACT = ROOT / 'simulation/ros2_ws/src/swarmroute_gazebo/config/fulfillment_contract.json'
+CONTRACT = ROOT / 'simulation/ros2_ws/src/kinesis_gazebo/config/fulfillment_contract.json'
 
 
 def inside(point, sections, margin=0):

@@ -1,9 +1,9 @@
 import pytest
 
-from swarmroute.domain import Cell, Task
-from swarmroute.graph import WarehouseMap
-from swarmroute.heuristics import DistanceOracle
-from swarmroute.schedule import (
+from kinesis.domain import Cell, Task
+from kinesis.graph import WarehouseMap
+from kinesis.heuristics import DistanceOracle
+from kinesis.schedule import (
     RobotHorizon,
     RollingHorizonScheduler,
     ScheduleWeights,

@@ -1,7 +1,7 @@
 import pytest
 
-from swarmroute.domain import Cell
-from swarmroute.scenario import ScenarioError, parse_scenario
+from kinesis.domain import Cell
+from kinesis.scenario import ScenarioError, parse_scenario
 
 
 def _raw_scenario() -> dict[str, object]:

@@ -14,7 +14,7 @@ import bpy
 from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[2]
-MODELS = ROOT / "simulation/ros2_ws/src/swarmroute_gazebo/models"
+MODELS = ROOT / "simulation/ros2_ws/src/kinesis_gazebo/models"
 COLORS = {
     "blue": (0.055, 0.20, 0.37, 1),
     "orange": (0.98, 0.33, 0.045, 1),
@@ -241,7 +241,7 @@ def save_model(name, collision, build):
     triangles = 0
     deps = bpy.context.evaluated_depsgraph_get()
     for paint, objects in groups.items():
-        rows = ["# SwarmRoute original Blender geometry; meters, Z up"]
+        rows = ["# Kinesis original Blender geometry; meters, Z up"]
         offset = 1
         for obj in objects:
             evaluated = obj.evaluated_get(deps)

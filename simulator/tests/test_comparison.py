@@ -1,10 +1,10 @@
 import pytest
 
-from swarmroute.comparison import compare_policies
-from swarmroute.domain import Cell, RobotState, Task
-from swarmroute.fleet import CoordinationPolicy, SimulationConfig
-from swarmroute.graph import WarehouseMap
-from swarmroute.scenario import Scenario
+from kinesis.comparison import compare_policies
+from kinesis.domain import Cell, RobotState, Task
+from kinesis.fleet import CoordinationPolicy, SimulationConfig
+from kinesis.graph import WarehouseMap
+from kinesis.scenario import Scenario
 
 
 def test_policy_comparison_uses_paired_task_outcomes() -> None:

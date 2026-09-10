@@ -11,7 +11,7 @@ import random
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
-GAZEBO = ROOT / "simulation/ros2_ws/src/swarmroute_gazebo"
+GAZEBO = ROOT / "simulation/ros2_ws/src/kinesis_gazebo"
 LAYOUT = ROOT / "simulation/layouts/fulfillment.json"
 
 
@@ -41,7 +41,7 @@ def generate():
     catalog = json.loads((GAZEBO / "models/industrial_catalog.json").read_text())
     randomizer = random.Random(layout["seed"])
     sdf = ET.Element("sdf", version="1.10")
-    world = child(sdf, "world", name="swarmroute_warehouse")
+    world = child(sdf, "world", name="kinesis_warehouse")
     physics = child(world, "physics", name="warehouse_physics", type="ignored")
     child(physics, "max_step_size", 0.002)
     child(physics, "real_time_factor", 1)
@@ -392,7 +392,7 @@ def generate():
         x, y = origin[0] + cell[0] * res, origin[1] + cell[1] * res
         spawns[name] = [x, y, 0]
         include = child(world, "include")
-        child(include, "uri", "model://swarmroute_amr")
+        child(include, "uri", "model://kinesis_amr")
         child(include, "name", name)
         child(include, "pose", numbers((x, y, 0.26, 0, 0, 0)))
     station_targets = [

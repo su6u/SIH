@@ -1,7 +1,7 @@
 import pytest
 
-from swarmroute.admission import AdmissionError, CellAdmission
-from swarmroute.domain import Cell, RobotState
+from kinesis.admission import AdmissionError, CellAdmission
+from kinesis.domain import Cell, RobotState
 
 
 def test_target_remains_blocked_until_the_owner_confirms_exit() -> None:

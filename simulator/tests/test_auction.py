@@ -1,10 +1,10 @@
 import pytest
 
-from swarmroute.allocation import Bid, BidComponents
-from swarmroute.auction import ReplicatedAuction
-from swarmroute.domain import Cell, RobotState, Task
-from swarmroute.fleet import FleetSimulation, SimulationConfig
-from swarmroute.graph import WarehouseMap
+from kinesis.allocation import Bid, BidComponents
+from kinesis.auction import ReplicatedAuction
+from kinesis.domain import Cell, RobotState, Task
+from kinesis.fleet import FleetSimulation, SimulationConfig
+from kinesis.graph import WarehouseMap
 
 
 BOOT_IDS = {"R1": "B1", "R2": "B2"}

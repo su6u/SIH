@@ -1,7 +1,7 @@
 import pytest
 
-from swarmroute.domain import Cell, RobotState, Task
-from swarmroute.physics import MotionConfig
+from kinesis.domain import Cell, RobotState, Task
+from kinesis.physics import MotionConfig
 
 
 @pytest.mark.parametrize("value", [float("nan"), float("inf")])

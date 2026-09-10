@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import random
 
-from swarmroute.domain import Cell, Plan, PlanStep
-from swarmroute.graph import WarehouseMap
-from swarmroute.heuristics import DistanceOracle
-from swarmroute.planner import NoPathError, SpaceTimeAStar
-from swarmroute.reservations import ReservationTable
-from swarmroute.sipp import SafeIntervalSearch
+from kinesis.domain import Cell, Plan, PlanStep
+from kinesis.graph import WarehouseMap
+from kinesis.heuristics import DistanceOracle
+from kinesis.planner import NoPathError, SpaceTimeAStar
+from kinesis.reservations import ReservationTable
+from kinesis.sipp import SafeIntervalSearch
 
 
 def _search(warehouse: WarehouseMap, table: ReservationTable) -> SafeIntervalSearch:

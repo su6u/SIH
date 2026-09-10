@@ -13,7 +13,7 @@ import bpy
 from mathutils import Euler, Matrix, Vector
 
 ROOT = Path(__file__).resolve().parents[2]
-GAZEBO = ROOT / "simulation/ros2_ws/src/swarmroute_gazebo"
+GAZEBO = ROOT / "simulation/ros2_ws/src/kinesis_gazebo"
 OUTPUT = ROOT / "simulation/previews"
 MESHES = {}
 MATERIALS = {}
@@ -137,7 +137,7 @@ def render():
         camera.data.type = "ORTHO"
         camera.data.ortho_scale = 119
         bpy.ops.wm.save_as_mainfile(
-            filepath=str(OUTPUT / "swarmroute-fulfillment.blend")
+            filepath=str(OUTPUT / "kinesis-fulfillment.blend")
         )
         return
     for name, position, target, scale in (

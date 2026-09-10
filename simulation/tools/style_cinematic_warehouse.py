@@ -122,7 +122,7 @@ def light_scene(scene):
 
 def main():
     bpy.ops.wm.open_mainfile(
-        filepath=str(OUT / "swarmroute-fulfillment-detailed.blend")
+        filepath=str(OUT / "kinesis-fulfillment-detailed.blend")
     )
     scene = bpy.context.scene
     clear_glass()
@@ -153,7 +153,7 @@ def main():
         "Warm greige concrete, warm practical lights, cool fill, reduced exposure"
     )
     repair(scene)
-    destination = OUT / "swarmroute-fulfillment-cinematic-fixed.blend"
+    destination = OUT / "kinesis-fulfillment-cinematic-fixed.blend"
     bpy.ops.wm.save_as_mainfile(filepath=str(destination))
     print(f"Saved {destination}", flush=True)
     if "--save-only" in sys.argv:

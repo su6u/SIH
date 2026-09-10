@@ -1,8 +1,8 @@
 import pytest
 
-from swarmroute.domain import Cell
-from swarmroute.graph import WarehouseMap
-from swarmroute.heuristics import DistanceOracle
+from kinesis.domain import Cell
+from kinesis.graph import WarehouseMap
+from kinesis.heuristics import DistanceOracle
 
 
 def test_distance_follows_the_map_not_the_straight_line() -> None:

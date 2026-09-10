@@ -10,12 +10,12 @@ from pathlib import Path
 
 import pytest
 
-from swarmroute.allocation import Bid, BidComponents
-from swarmroute.distributed import DistributedRobotNode, RobotIntent, unix_time_ms
-from swarmroute.domain import Cell
-from swarmroute.durable import JsonPeerStateStore
-from swarmroute.peer_transport import PeerEndpoint, UdpPeerTransport
-from swarmroute.protocol import MessageEnvelope
+from kinesis.allocation import Bid, BidComponents
+from kinesis.distributed import DistributedRobotNode, RobotIntent, unix_time_ms
+from kinesis.domain import Cell
+from kinesis.durable import JsonPeerStateStore
+from kinesis.peer_transport import PeerEndpoint, UdpPeerTransport
+from kinesis.protocol import MessageEnvelope
 
 
 ROBOT_IDS = ("R1", "R2", "R3")
@@ -443,7 +443,7 @@ def test_peer_cli_runs_three_independent_processes(tmp_path: Path) -> None:
         command = [
             sys.executable,
             "-m",
-            "swarmroute.peer_cli",
+            "kinesis.peer_cli",
             str(config_path),
             "--robot-id",
             robot_id,

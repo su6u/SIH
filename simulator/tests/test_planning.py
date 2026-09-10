@@ -1,7 +1,7 @@
-from swarmroute.domain import Cell, Plan, PlanStep
-from swarmroute.graph import WarehouseMap
-from swarmroute.planner import SpaceTimeAStar
-from swarmroute.reservations import ConflictKind, ReservationTable
+from kinesis.domain import Cell, Plan, PlanStep
+from kinesis.graph import WarehouseMap
+from kinesis.planner import SpaceTimeAStar
+from kinesis.reservations import ConflictKind, ReservationTable
 
 
 def test_space_time_astar_returns_shortest_unblocked_path() -> None:

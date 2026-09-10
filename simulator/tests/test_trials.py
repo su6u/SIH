@@ -5,12 +5,12 @@ from pathlib import Path
 
 import pytest
 
-from swarmroute.domain import Cell, RobotState, Task
-from swarmroute.fleet import CoordinationPolicy, SimulationConfig
-from swarmroute.graph import WarehouseMap
-from swarmroute.heuristics import DistanceOracle
-from swarmroute.scenario import Scenario, load_scenario
-from swarmroute.trials import randomize_scenario, run_trials
+from kinesis.domain import Cell, RobotState, Task
+from kinesis.fleet import CoordinationPolicy, SimulationConfig
+from kinesis.graph import WarehouseMap
+from kinesis.heuristics import DistanceOracle
+from kinesis.scenario import Scenario, load_scenario
+from kinesis.trials import randomize_scenario, run_trials
 
 SCENARIO = Path(__file__).parents[1] / "scenarios" / "warehouse-12.json"
 

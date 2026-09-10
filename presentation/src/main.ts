@@ -295,7 +295,7 @@ function makeRobotObject(trace: RobotTrace) {
     child.userData.sharedGeometry = true;
     const recolour = (source: THREE.Material) => {
       const copy = source.clone();
-      copy.userData.swarmrouteClone = true;
+      copy.userData.kinesisClone = true;
       const materialName = copy.name.toLowerCase();
       if (materialName.includes("mint") || child.name.toLowerCase().includes("floating shell")) {
         const standard = copy as THREE.MeshStandardMaterial;
@@ -531,7 +531,7 @@ function disposeRobotObject(root: THREE.Object3D) {
     if (transientGeometry) child.geometry.dispose();
     const materials = Array.isArray(child.material) ? child.material : [child.material];
     materials.forEach(material => {
-      if (material.userData.swarmrouteClone || transientGeometry) material.dispose();
+      if (material.userData.kinesisClone || transientGeometry) material.dispose();
     });
   });
 }

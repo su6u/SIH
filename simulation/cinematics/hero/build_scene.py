@@ -20,8 +20,8 @@ from validate import run as validate_motion
 from detail_fulfillment import box, curve, shader, cylinder
 
 OUT = HERE / 'output'
-BASE = ROOT / 'simulation/previews/swarmroute-fulfillment-cinematic-fixed.blend'
-DEST = OUT / 'swarmroute-hero-40s.blend'
+BASE = ROOT / 'simulation/previews/kinesis-fulfillment-cinematic-fixed.blend'
+DEST = OUT / 'kinesis-hero-40s.blend'
 MONO_FONT_CANDIDATES = (
     Path('/System/Library/Fonts/SFNSMono.ttf'),
     Path('/System/Library/Fonts/Supplemental/Andale Mono.ttf'),

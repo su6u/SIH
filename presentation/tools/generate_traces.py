@@ -12,13 +12,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "simulator" / "src"))
 
-from swarmroute.domain import Cell  # noqa: E402
-from swarmroute.fleet import FleetSimulation, SimulationConfig  # noqa: E402
-from swarmroute.operations import ConflictZone, Intervention, InterventionKind  # noqa: E402
-from swarmroute.physics import MotionConfig  # noqa: E402
-from swarmroute.runtime import replicated_auction_for  # noqa: E402
-from swarmroute.scenario import Scenario, load_scenario  # noqa: E402
-from swarmroute.trace import TraceMetadata, build_presentation_trace  # noqa: E402
+from kinesis.domain import Cell  # noqa: E402
+from kinesis.fleet import FleetSimulation, SimulationConfig  # noqa: E402
+from kinesis.operations import ConflictZone, Intervention, InterventionKind  # noqa: E402
+from kinesis.physics import MotionConfig  # noqa: E402
+from kinesis.runtime import replicated_auction_for  # noqa: E402
+from kinesis.scenario import Scenario, load_scenario  # noqa: E402
+from kinesis.trace import TraceMetadata, build_presentation_trace  # noqa: E402
 
 
 SCENARIO_PATH = ROOT / "simulator/scenarios/fulfillment-large-12.json"

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from swarmroute.domain import Cell, RobotState, Task
-from swarmroute.fleet import CoordinationPolicy, FleetSimulation, SimulationConfig
-from swarmroute.graph import WarehouseMap
+from kinesis.domain import Cell, RobotState, Task
+from kinesis.fleet import CoordinationPolicy, FleetSimulation, SimulationConfig
+from kinesis.graph import WarehouseMap
 
 
 def test_an_idle_robot_steps_off_an_endpoint_another_order_still_needs() -> None:

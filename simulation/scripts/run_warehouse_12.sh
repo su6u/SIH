@@ -9,6 +9,6 @@ scenario_path="${repository_dir}/simulator/scenarios/fulfillment-large-12.json"
 source /opt/ros/jazzy/setup.bash
 source "${workspace_dir}/install/setup.bash"
 set -u
-ros2 launch swarmroute_bringup warehouse_12.launch.py \
+ros2 launch kinesis_bringup warehouse_12.launch.py \
   "scenario:=${scenario_path}" \
   headless:=false

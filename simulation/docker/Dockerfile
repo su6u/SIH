@@ -28,26 +28,26 @@ RUN apt-get update \
     && dpkg --compare-versions "$(dpkg-query -W -f='${Version}' gz-launch7-cli)" ge 7.1.2 \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /opt/swarmroute
-RUN install -d -m 0750 /var/lib/swarmroute
+WORKDIR /opt/kinesis
+RUN install -d -m 0750 /var/lib/kinesis
 COPY simulator ./simulator
 RUN python3 -m pip install --break-system-packages ./simulator
 
 COPY simulation/ros2_ws ./simulation/ros2_ws
 RUN source /opt/ros/jazzy/setup.bash \
-    && cd /opt/swarmroute/simulation/ros2_ws \
+    && cd /opt/kinesis/simulation/ros2_ws \
     && colcon build --merge-install --cmake-args -DBUILD_TESTING=ON
 RUN source /opt/ros/jazzy/setup.bash \
-    && source /opt/swarmroute/simulation/ros2_ws/install/setup.bash \
-    && cd /opt/swarmroute/simulation/ros2_ws \
+    && source /opt/kinesis/simulation/ros2_ws/install/setup.bash \
+    && cd /opt/kinesis/simulation/ros2_ws \
     && colcon test --merge-install --event-handlers console_direct+ \
     && colcon test-result --verbose
 RUN source /opt/ros/jazzy/setup.bash \
-    && SDF_PATH=/opt/swarmroute/simulation/ros2_ws/install/share/swarmroute_gazebo/models \
-       gz sdf -k /opt/swarmroute/simulation/ros2_ws/install/share/swarmroute_gazebo/worlds/warehouse_fulfillment.sdf
+    && SDF_PATH=/opt/kinesis/simulation/ros2_ws/install/share/kinesis_gazebo/models \
+       gz sdf -k /opt/kinesis/simulation/ros2_ws/install/share/kinesis_gazebo/worlds/warehouse_fulfillment.sdf
 
 COPY simulation/docker/entrypoint.sh /entrypoint.sh
 RUN chmod 0755 /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["ros2", "launch", "swarmroute_bringup", "warehouse_12.launch.py", "scenario:=/opt/swarmroute/simulator/scenarios/fulfillment-large-12.json", "headless:=true"]
+CMD ["ros2", "launch", "kinesis_bringup", "warehouse_12.launch.py", "scenario:=/opt/kinesis/simulator/scenarios/fulfillment-large-12.json", "headless:=true"]

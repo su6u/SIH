@@ -97,7 +97,7 @@ def main() -> None:
     parser.add_argument(
         "requests",
         nargs="*",
-        default=("worlds,,,", "scene,,,swarmroute_warehouse"),
+        default=("worlds,,,", "scene,,,kinesis_warehouse"),
     )
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=9002)
@@ -107,7 +107,7 @@ def main() -> None:
         operation, topic, message_type, payload = response.split(b",", 3)
         markers = [
             marker.decode()
-            for marker in (b"swarmroute_warehouse", b"warehouse_floor", b"robot_01", b"robot_12")
+            for marker in (b"kinesis_warehouse", b"warehouse_floor", b"robot_01", b"robot_12")
             if marker in payload
         ]
         print(

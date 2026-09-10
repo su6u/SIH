@@ -14,10 +14,10 @@ from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "simulation/previews"
-BASE = OUT / "swarmroute-fulfillment.blend"
-DEST = OUT / "swarmroute-fulfillment-detailed.blend"
+BASE = OUT / "kinesis-fulfillment.blend"
+DEST = OUT / "kinesis-fulfillment-detailed.blend"
 CONTRACT = (
-    ROOT / "simulation/ros2_ws/src/swarmroute_gazebo/config/fulfillment_contract.json"
+    ROOT / "simulation/ros2_ws/src/kinesis_gazebo/config/fulfillment_contract.json"
 )
 
 
@@ -538,7 +538,7 @@ def make_scene():
         for v in __import__("xml.etree.ElementTree", fromlist=["ElementTree"])
         .parse(
             ROOT
-            / "simulation/ros2_ws/src/swarmroute_gazebo/models/swarmroute_amr/model.sdf"
+            / "simulation/ros2_ws/src/kinesis_gazebo/models/kinesis_amr/model.sdf"
         )
         .findall(".//visual")
     }

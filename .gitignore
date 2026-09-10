@@ -70,8 +70,8 @@ Thumbs.db
 # Unzipped copy of the sibling asset folders (byte-for-byte duplicate).
 /presentation/assets/presentation/
 
-# Duplicate of formulas/swarmroute-bid-formula*.svg.
-/presentation/assets/formulas/swarmroute-formula-svgs/
+# Duplicate of formulas/kinesis-bid-formula*.svg.
+/presentation/assets/formulas/kinesis-formula-svgs/
 
 # Orphaned browser traces from the retired 10-scenario demo. manifest.json
 # only loads peer-network, conflict-resolution and task-rerouting; regenerate

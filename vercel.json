@@ -1,0 +1,55 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "presentation": {
+      "root": "presentation",
+      "framework": "vite",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "simulator",
+          "format": "url",
+          "env": "SIMULATOR_URL"
+        }
+      ]
+    },
+    "simulator": {
+      "root": "simulator",
+      "runtime": "python"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "simulator"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "presentation"
+      }
+    }
+  ],
+  "headers": [
+    {
+      "source": "/models/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/data/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}

@@ -35,17 +35,45 @@
       }
     },
     {
+      "source": "/sih/presentation/assets/(.*)",
+      "destination": {
+        "service": "presentation",
+        "path": "/assets/$1"
+      }
+    },
+    {
+      "source": "/sih/presentation/models/(.*)",
+      "destination": {
+        "service": "presentation",
+        "path": "/models/$1"
+      }
+    },
+    {
+      "source": "/sih/presentation/data/(.*)",
+      "destination": {
+        "service": "presentation",
+        "path": "/data/$1"
+      }
+    },
+    {
+      "source": "/sih/presentation/favicon.ico",
+      "destination": {
+        "service": "presentation",
+        "path": "/favicon.ico"
+      }
+    },
+    {
       "source": "/sih/presentation",
       "destination": {
         "service": "presentation",
-        "path": "/"
+        "path": "/index.html"
       }
     },
     {
       "source": "/sih/presentation/(.*)",
       "destination": {
         "service": "presentation",
-        "path": "/$1"
+        "path": "/index.html"
       }
     },
     {

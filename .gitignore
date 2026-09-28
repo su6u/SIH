@@ -1,0 +1,99 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+build/
+dist/
+/presentation/node_modules/
+/presentation/dist/
+
+# Generated experiment and report output
+/outputs/
+/work/
+/output/
+/logs/
+/tmp/
+*.log
+
+# Local screenshots, previews, and cinematic render products
+/hero_*.png
+!hero_0450.png
+/simulation/previews/
+/simulation/cinematics/hero/output/
+*.blend1
+*.blend2
+
+# Downloaded research corpora and reproducible review intermediates
+/research/corpus/raw/
+/research/deep-audit-*/
+/research/deep-review-*/
+/research/presenter-whitepaper-*/
+/research/verified-industry-presentations/
+/research/report-source.md
+
+# ROS 2 / colcon
+simulation/ros2_ws/build/
+simulation/ros2_ws/install/
+simulation/ros2_ws/log/
+
+# Local environment, credentials, and editor files
+.env*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.codex/
+.agents/
+*.swp
+*.swo
+*~
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+.vercel/
+**/.vercel/
+/.attic/
+/research/
+/team/
+
+# Project documentation exception
+!CONTEXT.md
+
+# --- Redundant / derived presentation assets (verified unreferenced by the app) ---
+# Rendered previews of SVGs that live next to them; regenerate with the
+# generate-diagrams.mjs / generate-prototypes.mjs scripts in each folder.
+/presentation/assets/**/*.png
+/presentation/assets/**/preview/
+
+# Zip bundles of SVGs already stored uncompressed alongside them.
+/presentation/assets/**/*.zip
+
+# Unzipped copy of the sibling asset folders (byte-for-byte duplicate).
+/presentation/assets/presentation/
+
+# Duplicate of formulas/kinesis-bid-formula*.svg.
+/presentation/assets/formulas/kinesis-formula-svgs/
+
+# Orphaned browser traces from the retired 10-scenario demo. manifest.json
+# only loads peer-network, conflict-resolution and task-rerouting; regenerate
+# any trace with presentation/tools/generate_traces.py.
+/presentation/public/data/normal.json
+/presentation/public/data/peak-rush.json
+/presentation/public/data/low-battery.json
+/presentation/public/data/robot-failure.json
+/presentation/public/data/priority-order.json
+/presentation/public/data/blocked-aisle.json
+
+# Empty local scratch directories.
+/benchmark/
+/benchmark-finalcclear/

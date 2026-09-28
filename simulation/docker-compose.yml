@@ -1,0 +1,23 @@
+services:
+  warehouse-sim:
+    build:
+      context: ..
+      dockerfile: simulation/docker/Dockerfile
+    command:
+      - ros2
+      - launch
+      - kinesis_bringup
+      - warehouse_12.launch.py
+      - scenario:=/opt/kinesis/simulator/scenarios/fulfillment-large-12.json
+      - headless:=true
+      - state_directory:=/var/lib/kinesis
+    environment:
+      ROS_DOMAIN_ID: "42"
+    volumes:
+      - kinesis-peer-state:/var/lib/kinesis
+    ports:
+      - "127.0.0.1:9002:9002"
+    init: true
+
+volumes:
+  kinesis-peer-state:

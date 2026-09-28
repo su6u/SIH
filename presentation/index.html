@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Warehouse simulations</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="manifest" href="/assets/favicon/site.webmanifest" />
+  <meta name="theme-color" content="#191919" />
+</head>
+<body>
+<main id="app">
+<canvas id="world" aria-label="Interactive warehouse simulation"></canvas>
+<aside id="guide" aria-live="polite">
+<span id="guide-step">01 / BROADCAST</span>
+<strong id="guide-title">EACH ROBOT SHARES ITS NEXT MOVE</strong>
+<p id="guide-copy">Cyan waves carry position and intent directly to nearby robots.</p>
+</aside>
+<aside id="minimap" aria-label="Floor plan">
+<canvas id="minimap-canvas" width="456" height="328"></canvas>
+</aside>
+<section class="stack" aria-label="Simulation controls">
+<div class="panel controls">
+<label for="scenario-select">scenario</label><select id="scenario-select" aria-label="Choose simulation case"></select>
+<label for="camera-select">camera</label><select id="camera-select"><option value="auto">auto / event director</option><option value="bird">top / orthographic</option><option value="explore">orbit / manual</option><option value="follow">follow / selected robot</option></select>
+<div class="row"><button id="play">pause</button><button id="restart">restart</button><button id="replay-intro">reveal</button></div>
+<div class="row" id="compare-toggle" hidden><button data-compare="without">without</button><button data-compare="with">with kinesis</button></div>
+<div class="row settings"><label for="speed">speed</label><select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select><button id="links-toggle" class="active" aria-pressed="true">links / on</button></div>
+<div id="timeline" role="slider" tabindex="0" aria-label="Simulation timeline" aria-valuemin="0" aria-valuemax="120" aria-valuenow="0"><div class="rail"><i></i></div><output id="timeline-preview"></output></div>
+<div class="row time"><output id="elapsed">00:00</output><output id="duration">02:00</output></div>
+<output id="shot-caption" aria-live="polite">warehouse / establishing</output>
+</div>
+<div class="panel" id="feed" aria-label="Event log">
+<span class="panel-head">what just happened</span>
+<ol id="feed-list"></ol>
+</div>
+<div class="panel" id="telemetry" aria-label="Fleet telemetry">
+<span class="panel-head">fleet telemetry</span>
+<div class="tel-grid" id="tel-grid"></div>
+<div class="tel-bars" id="tel-bars"></div>
+<span class="tel-foot" id="tel-foot">solver idle</span>
+</div>
+</section>
+<div id="loading"><span id="loading-status">loading warehouse…</span></div>
+</main>
+<script type="module" src="/src/main.ts"></script>
+</body></html>

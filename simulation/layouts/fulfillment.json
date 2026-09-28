@@ -1,0 +1,12 @@
+{
+  "name": "Kinesis Fulfillment / FC-01",
+  "seed": 20260905,
+  "footprint": [[-18,-12],[72,-12],[72,30],[60,30],[60,42],[12,42],[12,54],[-18,54]],
+  "floor_sections": [[-18,-12,72,30],[-18,30,60,42],[-18,42,12,54]],
+  "grid": {"origin": [-15,-9], "resolution": 1.5, "width": 57, "height": 41, "clearance": 0.75},
+  "rack_x": [-9,3,15,27,39,51],
+  "rack_y": [0,12,24,36],
+  "robot_count": 12,
+  "task_count": 32,
+  "max_ticks": 360
+}

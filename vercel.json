@@ -15,7 +15,8 @@
     },
     "simulator": {
       "root": "simulator",
-      "runtime": "python"
+      "runtime": "python",
+      "entrypoint": "api/index.py"
     }
   },
   "rewrites": [

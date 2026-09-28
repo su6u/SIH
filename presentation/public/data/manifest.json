@@ -4,41 +4,41 @@
   "scenarios": [
     {
       "id": "peer-network",
-      "title": "Decentralized communication",
-      "subtitle": "Signed position-and-intent messages move directly-to-peer with no central server",
+      "title": "Who takes the order?",
+      "subtitle": "Six orders, no dispatcher: peers bid and the cheapest peer wins each one",
       "file": "/data/peer-network.json",
       "summary": {
-        "completed": 8,
+        "completed": 6,
         "conflicts": 0,
         "replans": 0,
-        "distance": 1527.0,
-        "robots": 12
+        "distance": 264.0,
+        "robots": 8
       }
     },
     {
       "id": "conflict-resolution",
-      "title": "Dynamic conflict resolution",
-      "subtitle": "A rejected collision path becomes a reserved, conflict-free crossing",
+      "title": "Two robots, one gap",
+      "subtitle": "Five peers squeeze through a single-cell aisle; the overlapping plan is refused",
       "file": "/data/conflict-resolution.json",
       "summary": {
-        "completed": 8,
+        "completed": 5,
         "conflicts": 0,
         "replans": 0,
-        "distance": 1527.0,
-        "robots": 12
+        "distance": 244.5,
+        "robots": 6
       }
     },
     {
       "id": "task-rerouting",
-      "title": "Task allocation & rerouting",
-      "subtitle": "A blocked aisle invalidates routes and returns work to peer auction",
+      "title": "The aisle just closed",
+      "subtitle": "A blocked gap invalidates live routes; the work returns to auction and still lands",
       "file": "/data/task-rerouting.json",
       "summary": {
-        "completed": 8,
+        "completed": 4,
         "conflicts": 0,
         "replans": 3,
-        "distance": 1536.0,
-        "robots": 12
+        "distance": 187.5,
+        "robots": 8
       }
     }
   ]

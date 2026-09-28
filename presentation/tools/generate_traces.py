@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from dataclasses import replace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -14,58 +13,66 @@ sys.path.insert(0, str(ROOT / "simulator" / "src"))
 
 from kinesis.domain import Cell  # noqa: E402
 from kinesis.fleet import FleetSimulation, SimulationConfig  # noqa: E402
-from kinesis.operations import ConflictZone, Intervention, InterventionKind  # noqa: E402
+from kinesis.operations import ConflictZone  # noqa: E402
 from kinesis.physics import MotionConfig  # noqa: E402
 from kinesis.runtime import replicated_auction_for  # noqa: E402
 from kinesis.scenario import Scenario, load_scenario  # noqa: E402
 from kinesis.trace import TraceMetadata, build_presentation_trace  # noqa: E402
 
 
-SCENARIO_PATH = ROOT / "simulator/scenarios/fulfillment-large-12.json"
+SCENARIOS = ROOT / "simulator/scenarios"
 LAYOUT_PATH = ROOT / "simulation/layouts/fulfillment.json"
 OUTPUT = ROOT / "presentation/public/data"
 
 NAMES = ("Mochi", "Pixel", "Boba", "Taro", "Bean", "Nori", "Pip", "Miso", "Kiki", "Tofu", "Yuzu", "Pocky")
 COLORS = ("#70e1d1", "#ffb37b", "#8bc6ff", "#d7a6ff", "#ffe27a", "#81dc9b", "#ff91ad", "#78a7ff", "#ffa8df", "#9ee8ff", "#ffcb74", "#b9eb8a")
-HORIZON = 150
+
+# Each case is one short, self-contained story on the shared warehouse map:
+# every order it announces is also delivered before the timeline ends, and the
+# horizon is sized to that story so the run never stops mid-shift. Durations are
+# deliberately kept under a minute of playback at 0.8s per tick.
+TICK_SECONDS = 0.8
+HORIZONS = {"peer-network": 65, "conflict-resolution": 64, "task-rerouting": 50}
 
 
 def _metadata(trace_id: str, kind: str, title: str, subtitle: str) -> TraceMetadata:
-    return TraceMetadata(trace_id, title, subtitle, kind, tick_seconds=0.42)
+    return TraceMetadata(trace_id, title, subtitle, kind, tick_seconds=TICK_SECONDS)
 
 
-def _variants(base: Scenario) -> tuple[tuple[Scenario, TraceMetadata], ...]:
-    base = replace(base, tasks=base.tasks[:16])
-    blocked = Intervention(
-        "blocked-aisle-001", 35, InterventionKind.BLOCK_CELLS,
-        cells=(Cell(29, 18),),
-    )
+def _variants() -> tuple[tuple[Scenario, TraceMetadata], ...]:
+    """One authored scenario per case, each proving the claim its title makes.
+
+    The three cases used to share a single 16-order workload, which meant the
+    conflict case recorded `rejected_plan_conflicts = 0` while claiming to show
+    a resolved conflict. Each case now has its own scenario file sized so the
+    phenomenon actually occurs and every order is delivered inside the horizon.
+    """
     return (
         (
-            base,
+            load_scenario(SCENARIOS / "story-allocation.json"),
             _metadata(
                 "peer-network",
                 "communication",
-                "Decentralized communication",
-                "Signed position-and-intent messages move directly-to-peer with no central server",
+                "Who takes the order?",
+                "Six orders, no dispatcher: peers bid and the cheapest peer wins each one",
             ),
         ),
         (
-            base,
+            load_scenario(SCENARIOS / "story-conflict.json"),
             _metadata(
                 "conflict-resolution",
                 "conflict",
-                "Dynamic conflict resolution",
-                "A rejected collision path becomes a reserved, conflict-free crossing",
+                "Two robots, one gap",
+                "Five peers squeeze through a single-cell aisle; the overlapping plan is refused",
             ),
         ),
         (
-            replace(base, interventions=(blocked,)),
+            load_scenario(SCENARIOS / "story-reroute.json"),
             _metadata(
                 "task-rerouting",
                 "reroute",
-                "Task allocation & rerouting",
-                "A blocked aisle invalidates routes and returns work to peer auction",
+                "The aisle just closed",
+                "A blocked gap invalidates live routes; the work returns to auction and still lands",
             ),
         ),
     )
@@ -77,11 +84,12 @@ def _run(scenario: Scenario, metadata: TraceMetadata, layout: dict) -> dict:
         ConflictZone("crossing-outbound", frozenset({Cell(50, 14)}), 3),
         ConflictZone("crossing-rack", frozenset({Cell(36, 26)}), 3),
     )
+    horizon = HORIZONS[metadata.trace_id]
     result = FleetSimulation(
         scenario.warehouse_map,
         scenario.robots,
         config=SimulationConfig(
-            max_ticks=HORIZON,
+            max_ticks=horizon,
             clearance_cells=1.4 / 1.5,
             planning_horizon_ticks=180,
             motion=MotionConfig(
@@ -97,16 +105,18 @@ def _run(scenario: Scenario, metadata: TraceMetadata, layout: dict) -> dict:
     if result.metrics.executed_grid_reverse_edge_conflicts:
         raise RuntimeError(f"{metadata.trace_id}: executed reverse-edge conflict")
     robot_ids = [robot.robot_id for robot in scenario.robots]
+    if len(robot_ids) > len(NAMES):
+        raise RuntimeError(f"{metadata.trace_id}: more robots than authored names")
     return build_presentation_trace(
         scenario,
         result,
         metadata,
         origin=tuple(float(value) for value in layout["grid"]["origin"]),
         resolution=float(layout["grid"]["resolution"]),
-        duration=HORIZON,
+        duration=horizon,
         interventions=scenario.interventions,
-        names=dict(zip(robot_ids, NAMES, strict=True)),
-        colors=dict(zip(robot_ids, COLORS, strict=True)),
+        names=dict(zip(robot_ids, NAMES[: len(robot_ids)], strict=True)),
+        colors=dict(zip(robot_ids, COLORS[: len(robot_ids)], strict=True)),
     )
 
 
@@ -124,9 +134,8 @@ def main() -> int:
         _write_manifest()
         print("rebuilt manifest from authoritative traces")
         return 0
-    base = load_scenario(SCENARIO_PATH)
     layout = json.loads(LAYOUT_PATH.read_text(encoding="utf-8"))
-    variants = _variants(base)
+    variants = _variants()
     if args.scenario:
         variants = tuple(
             item for item in variants if item[1].trace_id == args.scenario
@@ -143,8 +152,8 @@ def main() -> int:
         if args.scenario is None:
             _write_manifest()
     print(
-        f"validated {len(traces)} authoritative scenarios, "
-        f"{len(traces[0]['robots'])} robots, {HORIZON + 1} frames each"
+        f"validated {len(traces)} authoritative scenarios: "
+        + ", ".join(f"{t['id']} ({len(t['robots'])} robots, {t['duration']} ticks)" for t in traces)
     )
     return 0
 

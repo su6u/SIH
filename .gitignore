@@ -25,6 +25,7 @@ dist/
 
 # Local screenshots, previews, and cinematic render products
 /hero_*.png
+!hero_0450.png
 /simulation/previews/
 /simulation/cinematics/hero/output/
 *.blend1
@@ -43,7 +44,7 @@ simulation/ros2_ws/build/
 simulation/ros2_ws/install/
 simulation/ros2_ws/log/
 
-# Local environment and editor files
+# Local environment, credentials, and editor files
 .env*
 .DS_Store
 Thumbs.db
@@ -55,8 +56,18 @@ Thumbs.db
 *.swo
 *~
 *.pem
+*.key
+*.crt
+*.pfx
+*.p12
+.vercel/
+**/.vercel/
+/.attic/
 /research/
 /team/
+
+# Project documentation exception
+!CONTEXT.md
 
 # --- Redundant / derived presentation assets (verified unreferenced by the app) ---
 # Rendered previews of SVGs that live next to them; regenerate with the

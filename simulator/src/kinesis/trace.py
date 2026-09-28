@@ -184,6 +184,15 @@ def build_presentation_trace(
         "duration": horizon,
         "tickSeconds": metadata.tick_seconds,
         "seed": scenario.seed,
+        # Grid geometry so a read-only client can draw the floor plan without
+        # reloading the scenario. Blocked cells are the rack footprints.
+        "grid": {
+            "width": scenario.warehouse_map.width,
+            "height": scenario.warehouse_map.height,
+            "blocked": sorted(
+                [cell.x, cell.y] for cell in scenario.warehouse_map.blocked
+            ),
+        },
         "incidents": incident_items,
         "obstacles": obstacle_items,
         "robots": robot_items,

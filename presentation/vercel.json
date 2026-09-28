@@ -1,29 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/sih/presentation/assets/(.*)",
-      "destination": "/assets/$1"
-    },
-    {
-      "source": "/sih/presentation/models/(.*)",
-      "destination": "/models/$1"
-    },
-    {
-      "source": "/sih/presentation/data/(.*)",
-      "destination": "/data/$1"
-    },
-    {
-      "source": "/sih/presentation/favicon.ico",
-      "destination": "/favicon.ico"
+      "source": "/sih/presentation/:path*",
+      "destination": "/:path*",
+      "permanent": false
     },
     {
       "source": "/sih/presentation",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/sih/presentation/(.*)",
-      "destination": "/index.html"
+      "destination": "/",
+      "permanent": false
     }
   ],
   "headers": [

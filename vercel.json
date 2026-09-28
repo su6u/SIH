@@ -19,61 +19,24 @@
       "entrypoint": "api/index.py"
     }
   },
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/sih/presentation/api/(.*)",
-      "destination": {
-        "service": "simulator",
-        "path": "/api/$1"
-      }
+      "source": "/sih/presentation/:path*",
+      "destination": "/:path*",
+      "permanent": false
     },
+    {
+      "source": "/sih/presentation",
+      "destination": "/",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": {
         "service": "simulator",
         "path": "/api/$1"
-      }
-    },
-    {
-      "source": "/sih/presentation/assets/(.*)",
-      "destination": {
-        "service": "presentation",
-        "path": "/assets/$1"
-      }
-    },
-    {
-      "source": "/sih/presentation/models/(.*)",
-      "destination": {
-        "service": "presentation",
-        "path": "/models/$1"
-      }
-    },
-    {
-      "source": "/sih/presentation/data/(.*)",
-      "destination": {
-        "service": "presentation",
-        "path": "/data/$1"
-      }
-    },
-    {
-      "source": "/sih/presentation/favicon.ico",
-      "destination": {
-        "service": "presentation",
-        "path": "/favicon.ico"
-      }
-    },
-    {
-      "source": "/sih/presentation",
-      "destination": {
-        "service": "presentation",
-        "path": "/index.html"
-      }
-    },
-    {
-      "source": "/sih/presentation/(.*)",
-      "destination": {
-        "service": "presentation",
-        "path": "/index.html"
       }
     },
     {

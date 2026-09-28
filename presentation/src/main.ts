@@ -10,7 +10,7 @@ import { LineMaterial } from "three/addons/lines/LineMaterial.js";
 import "./style.css";
 import { woodFloor } from "./floor";
 import { createHazardMarker, createWarehouse } from "./warehouse";
-import type { Frame, Manifest, RobotTrace, Scenario } from "./types";
+import type { Frame, Manifest, RobotTrace, Scenario, SimulationEvent } from "./types";
 
 const q = <T extends HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
 const canvas = q<HTMLCanvasElement>("#world");
@@ -397,7 +397,7 @@ function updateDirector(delta: number) {
 
   if (scenario.id === "peer-network") {
     const phase = Math.floor(tick / 18) % 3;
-    const importantId = String(scenario.events.find(event => event.kind === "task_awarded")?.data.robot_id ?? "robot_09");
+    const importantId = leadPeerAt(tick);
     const recipients = stableNearestRobotIds(importantId, 3, tick);
     if (phase === 0) {
       key = "peer-network-send";
@@ -415,13 +415,13 @@ function updateDirector(delta: number) {
       const span = Math.max(...peers.map(id => robotObjects.get(id)?.position.distanceTo(target) ?? 0));
       key = "peer-message-exchange";
       offset.set(0, THREE.MathUtils.clamp(span * 2.15, 28, 46), 7);
-      caption = `peer 09 → ${relayId?.replace("robot_", "peer ") ?? "neighbor"} → two local peers`;
+      caption = `${importantId.replace("robot_", "peer ")} → ${relayId?.replace("robot_", "peer ") ?? "neighbor"} → two local peers`;
       tracksSubject = true;
     } else {
       key = "peer-task-agreement";
       target.copy(robotObjects.get(importantId)?.position ?? target);
       offset.set(0, 23, 5);
-      caption = "peer 09 / accepts winning bid";
+      caption = `${importantId.replace("robot_", "peer ")} / accepts winning bid`;
       tracksSubject = true;
     }
   } else if (scenario.id === "conflict-resolution") {
@@ -736,20 +736,176 @@ function stableNearestRobotIds(id: string, count: number, tick: number, excluded
   return nearest;
 }
 
-function conflictBeatAt(tick: number) {
-  const leases = scenario.events.filter(event => event.kind === "zone_lease_entered").sort((a, b) => a.tick - b.tick);
-  const imminent = leases.find(event => event.tick >= tick && event.tick - tick <= 8);
-  const previous = [...leases].reverse().find(event => event.tick <= tick);
-  const event = previous && tick - previous.tick <= 11 ? previous : imminent ?? previous ?? leases[0];
-  if (!event) return { key: "fallback", tick: activeConflictTick, point: activeConflictPoint.clone(), winnerId: "robot_09" };
-  const winnerId = String(event.data.robot_id ?? "robot_09");
-  const trace = scenario.robots.find(robot => robot.id === winnerId);
-  const frame = trace?.frames[Math.min(event.tick, (trace?.frames.length ?? 1) - 1)];
-  const point = frame ? new THREE.Vector3(frame.x, .2, frame.z) : activeConflictPoint.clone();
-  return { key: `${event.entityId}-${event.tick}`, tick: event.tick, point, winnerId };
+/** The reservation rejections the simulator actually recorded, in tick order. */
+type StoryBeat = { from: number; step: string; title: string; copy: string; label: string; color: string };
+let storyCache: { id: string; beats: StoryBeat[] } | null = null;
+
+function firstTick(kind: string, fallback: number) {
+  return scenario.events.find(event => event.kind === kind)?.tick ?? fallback;
 }
 
+function lastTick(kind: string, fallback: number) {
+  return [...scenario.events].reverse().find(event => event.kind === kind)?.tick ?? fallback;
+}
+
+/**
+ * Each case as three acts plus a result, anchored to the ticks its own events
+ * actually happen at. Written so a viewer who knows nothing can follow: what
+ * the situation is, what goes wrong, what the fleet does, and how it ended.
+ */
+function buildStoryBeats(): StoryBeat[] {
+  const orders = new Set(scenario.events.filter(e => e.kind === "task_announced").map(e => e.entityId)).size;
+  const done = lastTick("task_completed", scenario.duration);
+
+  if (scenario.id === "conflict-resolution") {
+    const clash = scenario.events.find(event => event.kind === "plan_conflict_rejected");
+    const at = Number(clash?.data.conflict_tick ?? clash?.tick ?? 0);
+    const refused = robotName(String(clash?.data.robot_id ?? ""));
+    const holder = robotName(String(clash?.data.owner_id ?? ""));
+    return [
+      { from: 0, step: "ACT 1 / THE SQUEEZE", title: `${orders} PEERS, ONE SINGLE-CELL GAP`,
+        copy: "Every route here must pass through one gap in the rack row. It fits exactly one robot at a time, and two peers want it on the same tick.",
+        label: "ONE CELL WIDE", color: "#9cecff" },
+      { from: Math.max(1, at), step: "ACT 2 / THE REFUSAL", title: `${refused.toUpperCase()} IS REFUSED THE CELL`,
+        copy: `${holder} already reserved that cell for that exact tick, so the overlapping plan is rejected before either robot moves. Nothing has to brake.`,
+        label: "PLAN REJECTED", color: "#ffcf63" },
+      { from: at + 6, step: "ACT 3 / THE DETOUR", title: `${refused.toUpperCase()} RE-PLANS AND GOES ROUND`,
+        copy: "The refused peer takes the next free gap instead of queueing. The reservation, not a traffic rule, is what keeps them apart.",
+        label: "REROUTED", color: "#8fffc6" },
+      { from: done, step: "RESULT", title: `ALL ${orders} ORDERS DELIVERED, ZERO COLLISIONS`,
+        copy: "One plan refused, one detour taken, every order still landed inside the shift.",
+        label: `${orders} / ${orders} DELIVERED`, color: "#8fffc6" },
+    ];
+  }
+
+  if (scenario.id === "task-rerouting") {
+    const at = scenario.incidents[0]?.tick ?? firstTick("cells_blocked", 14);
+    const requeued = scenario.events.filter(event => event.kind === "task_requeued").length;
+    return [
+      { from: 0, step: "ACT 1 / NORMAL RUN", title: `${orders} ORDERS ROUTED THROUGH ONE GAP`,
+        copy: "The fleet is working normally. Every live route depends on the same gap through the rack row.",
+        label: "ROUTES COMMITTED", color: "#9cecff" },
+      { from: at, step: "ACT 2 / THE BLOCK", title: "THE GAP CLOSES WHILE ROBOTS ARE COMMITTED",
+        copy: `That cell becomes impassable mid-route. ${requeued} live assignments are invalidated on the spot — including one robot already carrying a payload.`,
+        label: "AISLE BLOCKED", color: "#ff7e6b" },
+      { from: at + 2, step: "ACT 3 / BACK TO AUCTION", title: "THE LOST WORK IS RE-AUCTIONED",
+        copy: "No supervisor reassigns anything. The freed orders go back out to the peers, who re-bid and re-plan around the closed cell.",
+        label: `${requeued} REASSIGNED`, color: "#ffe093" },
+      { from: done, step: "RESULT", title: `ALL ${orders} ORDERS STILL DELIVERED`,
+        copy: "The block cost a detour, not a delivery. Nothing was dropped and nothing collided.",
+        label: `${orders} / ${orders} DELIVERED`, color: "#8fffc6" },
+    ];
+  }
+
+  const award = firstTick("task_awarded", 0);
+  const pick = firstTick("task_picked", 6);
+  return [
+    { from: 0, step: "ACT 1 / THE ORDER", title: `${orders} ORDERS ARRIVE, NOBODY IS IN CHARGE`,
+      copy: "There is no dispatcher and no server. Each order is announced to every peer, and every peer prices it from where it happens to be standing.",
+      label: "NO CENTRAL SERVER", color: "#9cecff" },
+    { from: Math.max(1, award), step: "ACT 2 / THE AUCTION", title: "THE CHEAPEST BID WINS THE ORDER",
+      copy: "A bid is that robot's own cost: distance to the pickup, battery left, and work already queued. Lowest bid takes the job — no vote, no coordinator.",
+      label: "CHEAPEST PEER WINS", color: "#ffe093" },
+    { from: Math.max(2, pick), step: "ACT 3 / THE DELIVERY", title: "THE WINNER CARRIES ITS OWN ORDER",
+      copy: "The peer that won is the peer that drives. It reserves the cells it needs, collects the payload and delivers without asking anyone.",
+      label: "SELF-DIRECTED", color: "#8fffc6" },
+    { from: done, step: "RESULT", title: `ALL ${orders} ORDERS DELIVERED`,
+      copy: "Every order announced in this run was bid for, won and delivered inside the shift.",
+      label: `${orders} / ${orders} DELIVERED`, color: "#8fffc6" },
+  ];
+}
+
+function storyBeats() {
+  if (storyCache?.id !== scenario.id) storyCache = { id: scenario.id, beats: buildStoryBeats() };
+  return storyCache.beats;
+}
+
+/** Show the act that is running at `tick`, anchored at `position`. */
+function applyStoryBeat(tick: number, position: THREE.Vector3) {
+  const beats = storyBeats();
+  let active = beats[0];
+  for (const beat of beats) if (tick >= beat.from) active = beat;
+  setExplanation(`${scenario.id}-${active.step}`, active.step, active.title, active.copy, active.label, active.color, position);
+}
+
+const leadPeerCache = new Map<string, string>();
+const NOTEWORTHY = new Set(["task_picked", "task_dropped", "task_completed", "zone_lease_entered", "plan_conflict_rejected"]);
+
+function isMovingNear(trace: RobotTrace, tick: number) {
+  const frames = trace.frames;
+  const from = Math.max(1, Math.floor(tick) - 4);
+  const to = Math.min(frames.length - 1, Math.floor(tick) + 12);
+  for (let index = from; index <= to; index++) {
+    if (Math.abs(frames[index].x - frames[index - 1].x) > 1e-6) return true;
+    if (Math.abs(frames[index].z - frames[index - 1].z) > 1e-6) return true;
+  }
+  return false;
+}
+
+/**
+ * The peer worth watching at `tick`: one that is actually driving, preferring
+ * whoever reaches a pickup/drop/reservation soonest.
+ *
+ * The previous rule — winner of the *first* award — pinned every shot to one
+ * robot for the whole run. In peer-network that is robot_09, which wins an
+ * order whose pickup_tick (157) falls beyond the 150-tick horizon, so it parks
+ * at tick 95 and the camera then watches it sit still for the last 44 seconds.
+ * Held stable in 9-tick buckets so the framing does not jitter.
+ */
+function leadPeerAt(tick: number) {
+  const key = `${scenario.id}:${Math.floor(tick / 9)}`;
+  const cached = leadPeerCache.get(key);
+  if (cached) return cached;
+  if (leadPeerCache.size > 128) leadPeerCache.clear();
+  const now = Math.max(0, Math.floor(tick));
+  const moving = scenario.robots.filter(trace => isMovingNear(trace, now));
+  const pool = moving.length ? moving : scenario.robots;
+  let best = pool[0]?.id ?? "robot_09";
+  let bestGap = Infinity;
+  for (const event of scenario.events) {
+    if (event.tick < now || !NOTEWORTHY.has(event.kind)) continue;
+    const id = String(event.data.robot_id ?? "");
+    if (!pool.some(trace => trace.id === id)) continue;
+    if (event.tick - now < bestGap) { bestGap = event.tick - now; best = id; }
+  }
+  leadPeerCache.set(key, best);
+  return best;
+}
+
+function conflictEvents() {
+  return scenario.events
+    .filter(event => event.kind === "plan_conflict_rejected")
+    .sort((a, b) => a.tick - b.tick);
+}
+
+/**
+ * The rejection nearest `tick`. `ownerId` already holds the reservation and
+ * keeps moving; `rejectedId` is the peer whose candidate plan was refused and
+ * which must re-plan. Both ids come from the event, never from proximity.
+ */
+function conflictBeatAt(tick: number) {
+  const conflicts = conflictEvents();
+  const imminent = conflicts.find(event => event.tick >= tick && event.tick - tick <= 8);
+  const previous = [...conflicts].reverse().find(event => event.tick <= tick);
+  const event = previous && tick - previous.tick <= 11 ? previous : imminent ?? previous ?? conflicts[0];
+  if (!event) return { key: "fallback", tick: activeConflictTick, point: activeConflictPoint.clone(), winnerId: "robot_09", rejectedId: "robot_09" };
+  const winnerId = String(event.data.owner_id ?? event.data.robot_id ?? "robot_09");
+  const rejectedId = String(event.data.robot_id ?? winnerId);
+  const world = event.data.world as { x: number; z: number } | undefined;
+  const point = world
+    ? new THREE.Vector3(world.x, .2, world.z)
+    : activeConflictPoint.clone();
+  return { key: `${event.entityId}-${event.tick}`, tick: Number(event.data.conflict_tick ?? event.tick), point, winnerId, rejectedId };
+}
+
+/** The two peers the recorded conflict actually names, owner first. */
 function importantConflictIds(eventTick = activeConflictTick, point = activeConflictPoint) {
+  const beat = conflictBeatAt(eventTick);
+  const ids = [beat.winnerId, beat.rejectedId].filter(
+    (id, index, all) => id && all.indexOf(id) === index && scenario.robots.some(robot => robot.id === id),
+  );
+  if (ids.length === 2) return ids;
+  // Only reached for a trace with no recorded rejection at all.
   return scenario.robots
     .map(trace => ({ id: trace.id, frame: trace.frames[Math.min(eventTick, trace.frames.length - 1)] }))
     .sort((a, b) => Math.hypot(a.frame.x - point.x, a.frame.z - point.z) - Math.hypot(b.frame.x - point.x, b.frame.z - point.z))
@@ -789,7 +945,7 @@ function updateExplanation(tick: number, _time: number) {
     const phase = Math.floor(tick / 18) % 3;
     const phaseTick = tick % 18;
     const cycle = (phaseTick % 6) / 6;
-    const senderId = String(scenario.events.find(event => event.kind === "task_awarded")?.data.robot_id ?? "robot_09");
+    const senderId = leadPeerAt(tick);
     const sender = robotObjects.get(senderId)?.position ?? new THREE.Vector3(27, 0, -20);
     const recipients = stableNearestRobotIds(senderId, 3, tick);
     if (phase === 0) {
@@ -801,7 +957,7 @@ function updateExplanation(tick: number, _time: number) {
         showCausalPath(index, causalCurve(sender, recipient), 0x78e5ff, travel, travel);
         if (travel > .82) showRobotRing(id, 0xf4fcff, (travel - .82) / .18);
       });
-      setExplanation("peer-send", "01 / SEND", "PEER 09 SENDS POSITION + INTENT", "The signal leaves one robot and reaches only its nearest peers.", "SENDING TO 3 PEERS", "#9cecff", sender);
+      applyStoryBeat(tick, sender);
     } else if (phase === 1) {
       const relayId = recipients[0] ?? senderId;
       const relay = robotObjects.get(relayId)?.position ?? sender;
@@ -816,11 +972,11 @@ function updateExplanation(tick: number, _time: number) {
         showCausalPath(index + 1, causalCurve(relay, destination), 0x78e5ff, secondLeg, secondLeg);
         if (secondLeg > .82) showRobotRing(id, 0x78e5ff, (secondLeg - .82) / .18);
       });
-      setExplanation("peer-relay", "02 / RELAY", "A NEARBY ROBOT RELAYS THE MESSAGE", "The second hop proves the mesh works without a central server.", "DIRECT → RELAY → PEER", "#f4fcff", relay);
+      applyStoryBeat(tick, relay);
     } else {
       showRobotRing(senderId, 0x64efb0, 0, true);
       focusExplanation(sender, 0x64efb0, 0);
-      setExplanation("peer-agree", "03 / AGREE", "PEER 09 WINS THE LOCAL BID", "Acknowledgements complete the decision; only the selected robot takes the task.", "✓ TASK ACCEPTED", "#8fffc6", sender);
+      applyStoryBeat(tick, sender);
     }
     return;
   }
@@ -829,12 +985,16 @@ function updateExplanation(tick: number, _time: number) {
     if (compareMode === "without") {
       const converge = THREE.MathUtils.clamp(comparisonSeconds / 4.8, 0, 1);
       focusExplanation(activeConflictPoint, 0xff5d55, 1 - converge, true);
+      // Not an invented scenario: the simulator recorded a rejected plan for
+      // this exact cell and tick. This replays the route it refused to commit.
       setExplanation(
         comparisonSeconds < 4.8 ? "conflict-converge" : "conflict-hit",
-        comparisonSeconds < 4.8 ? "01 / NO COORDINATION" : "02 / COLLISION",
-        comparisonSeconds < 4.8 ? "TWO ROBOTS CLAIM THE SAME SPACE" : "THEIR PATHS OVERLAP",
-        comparisonSeconds < 4.8 ? "Red paths converge because nobody announces or reserves the crossing." : "This is the failure case the decentralized protocol prevents.",
-        comparisonSeconds < 4.8 ? "SAME SPACE · SAME TIME" : "COLLISION",
+        comparisonSeconds < 4.8 ? "01 / THE REJECTED PLAN" : "02 / WHY IT WAS REJECTED",
+        comparisonSeconds < 4.8 ? "REPLAY OF THE PLAN THAT WAS REFUSED" : "BOTH REACH THIS CELL ON THE SAME TICK",
+        comparisonSeconds < 4.8
+          ? `Reconstructed from the recorded rejection at tick ${activeConflictTick}; no robot ever drove this route.`
+          : "The reservation check caught this before either plan was committed.",
+        comparisonSeconds < 4.8 ? "REJECTED PLAN · NOT EXECUTED" : "SAME CELL · SAME TICK",
         "#ff746d",
         activeConflictPoint,
       );
@@ -862,11 +1022,11 @@ function updateExplanation(tick: number, _time: number) {
     }
     focusExplanation(beat.point, relativeTick < 4 ? 0xffcf63 : 0x64efb0, 0);
     if (relativeTick < -2) {
-      setExplanation(`conflict-announce-${beat.key}`, "01 / ANNOUNCE", "TWO INTENTS REACH THE CROSSING", "Amber paths show the complete requests while the bright stroke carries each live intent.", "REQUESTING ACCESS", "#ffe093", beat.point);
+      applyStoryBeat(tick, beat.point);
     } else if (relativeTick < 4) {
-      setExplanation(`conflict-reserve-${beat.key}`, "02 / RESERVE", "GREEN MOVES; AMBER WAITS", "Only the granted robot enters the reserved zone during this time window.", "1 GRANTED · 1 WAITS", "#ffe093", beat.point);
+      applyStoryBeat(tick, beat.point);
     } else {
-      setExplanation(`conflict-release-${beat.key}`, "03 / RELEASE", "THE RESERVED ZONE OPENS AGAIN", "The reservation clears as soon as the green robot leaves the crossing.", "CROSSING RELEASED", "#8fffc6", beat.point);
+      applyStoryBeat(tick, beat.point);
     }
     return;
   }
@@ -880,27 +1040,27 @@ function updateExplanation(tick: number, _time: number) {
   if (tick < incidentTick) {
     const scan = (tick % 5) / 5;
     focusExplanation(blocked, 0xffcf63, scan, true);
-    setExplanation("reroute-monitor", "01 / MONITOR", "THE ASSIGNED ROUTE IS CHECKED AHEAD", "The amber scan is testing the exact aisle the robot plans to use.", "CHECKING ASSIGNED ROUTE", "#ffe093", blocked);
+    applyStoryBeat(tick, blocked);
   } else if (tick < incidentTick + 5) {
     const stop = THREE.MathUtils.clamp((tick - incidentTick) / 5, 0, 1);
     showCausalPath(0, causalCurve(previous, blocked, .04), 0xff654f, 1, Math.min(stop, .82));
     focusExplanation(blocked, 0xff654f, 0);
     showRobotRing(actors.previous, 0xff654f, 0, true);
-    setExplanation("reroute-blocked", "02 / INVALIDATE", "THE RED ROUTE STOPS AT THE BLOCK", "The old assignment is cancelled before its robot enters the closed aisle.", "OLD ROUTE INVALID", "#ff7e6b", blocked);
+    applyStoryBeat(tick, blocked);
   } else if (tick < incidentTick + 16) {
     const handoff = THREE.MathUtils.clamp((tick - incidentTick - 5) / 11, 0, 1);
     showCausalPath(0, causalCurve(previous, next, .15), 0x78e5ff, handoff, handoff);
     showRobotRing(actors.previous, 0xffcf63, 0, true);
     if (handoff > .72) showRobotRing(actors.next, 0x78e5ff, (handoff - .72) / .28);
     const midpoint = previous.clone().lerp(next, .5);
-    setExplanation("reroute-handoff", "03 / HANDOFF", `${actors.previous.toUpperCase()} SENDS THE TASK TO ${actors.next.toUpperCase()}`, "The cyan transfer path carries the reassigned pickup to the next robot.", "TASK HANDOFF", "#9cecff", midpoint);
+    applyStoryBeat(tick, midpoint);
   } else {
     const trace = scenario.robots.find(robot => robot.id === actors.next);
     const start = Math.min(Math.floor(tick), (trace?.frames.length ?? 1) - 1);
     const path = trace?.frames.slice(start, start + 20).map(frame => new THREE.Vector3(frame.x, 1.05, frame.z)) ?? [];
     if (path.length > 1) showCausalPath(0, path, 0x64efb0, 1, ((tick - incidentTick - 16) % 8) / 8);
     showRobotRing(actors.next, 0x64efb0, 0, true);
-    setExplanation("reroute-detour", "04 / DETOUR", `${actors.next.toUpperCase()} FOLLOWS THE NEW GREEN ROUTE`, "The blocked cell stays isolated while the rest of the fleet keeps working.", "NEW ROUTE ACTIVE", "#8fffc6", next);
+    applyStoryBeat(tick, next);
   }
 }
 
@@ -970,8 +1130,8 @@ function updatePeerOverlay(_time: number) {
   if (!scenario) return;
   const show = scenario.id === "peer-network";
   peerOverlay.visible = show && linksEnabled;
-  const peerLead = String(scenario.events.find(event => event.kind === "task_awarded")?.data.robot_id ?? "robot_09");
   const tick = elapsedSeconds / scenario.tickSeconds;
+  const peerLead = leadPeerAt(tick);
   const importantLabels = scenario.id === "peer-network"
     ? [peerLead, ...stableNearestRobotIds(peerLead, 3, tick)]
     : scenario.id === "conflict-resolution"
@@ -1100,7 +1260,10 @@ function updateScenarioOverlays(tick: number, time: number) {
   comparisonOverlay.children.filter(child => child.name.startsWith("counterfactual")).forEach((robot, index) => {
     const collisionOffset = new THREE.Vector3(index === 0 ? -.32 : .32, 0, index === 0 ? .16 : -.16);
     robot.position.lerpVectors(starts[index], activeConflictPoint.clone().add(collisionOffset), alpha);
-    robot.rotation.y = index === 0 ? -Math.PI / 2 : Math.PI / 2;
+    // These two close along X, so they must face along X. Traces use
+    // yaw = atan2(dz, dx) and updateWorld applies rotation.y = -yaw, giving
+    // 0 for +X travel and -PI for -X. Facing +/-PI/2 made them strafe sideways.
+    robot.rotation.y = index === 0 ? 0 : -Math.PI;
   });
   if (seconds > 8) setCompareMode("with");
 }
@@ -1121,6 +1284,8 @@ async function loadScenario(id: string) {
   scenario = await fetch(meta.file).then(response => response.json()) as Scenario;
   scenario.events ??= [];
   peerNeighborCache.clear();
+  leadPeerCache.clear();
+  minimapBackdrop = null;
   elapsedSeconds = scenario.id === "task-rerouting" ? 24 * scenario.tickSeconds : 0;
   lastRouteTick = -99; hazard.visible=false; comparisonSeconds = 0; directorShotKey = "";
   populateFleet();
@@ -1167,7 +1332,204 @@ function setCompareMode(mode: "without" | "with") {
   syncPlayControl();
 }
 
-function updateInterface(_tick: number) { renderCasePanel(); }
+function robotName(id: string) {
+  const trace = scenario.robots.find(robot => robot.id === id);
+  return trace ? `${trace.name} ${id.slice(-2)}` : id.replace("robot_", "peer ");
+}
+
+function orderName(entityId: string) {
+  return entityId.startsWith("fc_order_") ? `order ${entityId.slice(-3)}` : entityId;
+}
+
+/**
+ * Plain-English line for one recorded event, or null for the high-frequency
+ * bookkeeping kinds (robot_moved, task_bid) that would drown the log.
+ */
+function describeEvent(event: SimulationEvent): string | null {
+  const who = robotName(String(event.data.robot_id ?? ""));
+  const order = orderName(event.entityId);
+  switch (event.kind) {
+    case "task_announced": return `<b>${order}</b> released to the fleet`;
+    case "task_awarded": return `<b>${who}</b> won ${order} — best bid of the round`;
+    case "task_picked": return `<b>${who}</b> picked up ${order}`;
+    case "task_dropped": return `<b>${who}</b> dropped ${order} at its bay`;
+    case "task_completed": return `<b>${order}</b> complete`;
+    case "zone_lease_entered": return `<b>${who}</b> reserved ${event.entityId}`;
+    case "zone_lease_released": return `<b>${who}</b> released ${event.entityId}`;
+    case "task_requeued": return `<b>${order}</b> route invalidated — back to auction`;
+    case "cells_blocked": return `<b>Aisle blocked</b> — that cell is now off-limits`;
+    case "plan_conflict_rejected":
+      return `<b>${who}</b> refused a plan — cell already held by ${robotName(String(event.data.owner_id ?? ""))}`;
+    default: return null;
+  }
+}
+
+/** The last few things that happened at or before `tick`, newest first. */
+function updateEventFeed(tick: number) {
+  const list = q("#feed-list");
+  const recent: string[] = [];
+  for (let index = scenario.events.length - 1; index >= 0 && recent.length < 4; index--) {
+    const event = scenario.events[index];
+    if (event.tick > tick) continue;
+    const text = describeEvent(event);
+    if (!text) continue;
+    const age = tick - event.tick;
+    recent.push(
+      `<li class="${age > 12 ? "dim" : ""}"><time>${formatTime(event.tick * scenario.tickSeconds)}</time><span>${text}</span></li>`,
+    );
+  }
+  const markup = recent.join("");
+  if (list.dataset.markup !== markup) {
+    list.dataset.markup = markup;
+    list.innerHTML = markup || `<li class="dim"><time>--:--</time><span>waiting for the first order…</span></li>`;
+  }
+}
+
+// ---- Floor plan -----------------------------------------------------------
+// World<->grid: the trace stores world x/z, the grid stores cells. Cell size
+// and origin come from the same layout the 3D scene is built from.
+const CELL_M = 1.5, ORIGIN_X = -15, ORIGIN_Z = -9;
+const cellOfWorld = (x: number, z: number): [number, number] =>
+  [(x - ORIGIN_X) / CELL_M, (-z - ORIGIN_Z) / CELL_M];
+
+let minimapBackdrop: HTMLCanvasElement | null = null;
+
+/** Rack footprints never move, so bake them once per scenario. */
+function buildMinimapBackdrop() {
+  const grid = scenario.grid;
+  if (!grid) return null;
+  const host = document.querySelector<HTMLCanvasElement>("#minimap-canvas");
+  if (!host) return null;
+  const canvas = document.createElement("canvas");
+  canvas.width = host.width; canvas.height = host.height;
+  const paint = canvas.getContext("2d");
+  if (!paint) return null;
+  const sx = canvas.width / grid.width, sy = canvas.height / grid.height;
+  paint.fillStyle = "#141a1f";
+  paint.fillRect(0, 0, canvas.width, canvas.height);
+  paint.fillStyle = "#5a6472";
+  // Bake at canvas resolution so the racks stay crisp when CSS scales it down.
+  for (const [x, y] of grid.blocked) paint.fillRect(x * sx, y * sy, Math.ceil(sx), Math.ceil(sy));
+  return canvas;
+}
+
+function updateMinimap(tick: number) {
+  const canvas = document.querySelector<HTMLCanvasElement>("#minimap-canvas");
+  const grid = scenario.grid;
+  if (!canvas || !grid) return;
+  const paint = canvas.getContext("2d");
+  if (!paint) return;
+  if (!minimapBackdrop) minimapBackdrop = buildMinimapBackdrop();
+  const sx = canvas.width / grid.width, sy = canvas.height / grid.height;
+  paint.clearRect(0, 0, canvas.width, canvas.height);
+    if (minimapBackdrop) paint.drawImage(minimapBackdrop, 0, 0, canvas.width, canvas.height);
+
+  // aisle grid lines, faint
+  paint.strokeStyle = "rgba(255,255,255,.05)"; paint.lineWidth = Math.max(0.5, sx * 0.12);
+  for (let x = 0; x <= grid.width; x += 8) { paint.beginPath(); paint.moveTo(x*sx, 0); paint.lineTo(x*sx, canvas.height); paint.stroke(); }
+  for (let y = 0; y <= grid.height; y += 8) { paint.beginPath(); paint.moveTo(0, y*sy); paint.lineTo(canvas.width, y*sy); paint.stroke(); }
+
+  // blocked cells that are live at this tick
+  for (const obstacle of scenario.obstacles ?? []) {
+    if (tick < obstacle.fromTick || tick > obstacle.toTick) continue;
+    paint.fillStyle = "#ff6b52";
+    for (const [x, y] of obstacle.cells) paint.fillRect(x*sx - 1, y*sy - 1, sx + 2, sy + 2);
+  }
+
+  const points = scenario.robots.map(trace => {
+    const frame = trace.frames[Math.max(0, Math.min(Math.floor(tick), trace.frames.length - 1))];
+    const [cx, cy] = cellOfWorld(frame.x, frame.z);
+    return { id: trace.id, color: trace.color, x: cx * sx, y: cy * sy, moving: frame.status === "moving" };
+  });
+
+  // peer links: direct-to-peer range, drawn only between nearby robots
+  if (linksEnabled) {
+    const range = 14 * sx;
+    paint.lineWidth = Math.max(1, sx * 0.35);
+    for (let a = 0; a < points.length; a++) {
+      for (let b = a + 1; b < points.length; b++) {
+        const distance = Math.hypot(points[a].x - points[b].x, points[a].y - points[b].y);
+        if (distance > range) continue;
+        paint.strokeStyle = `rgba(79,210,255,${(0.72 * (1 - distance / range)).toFixed(3)})`;
+        paint.beginPath(); paint.moveTo(points[a].x, points[a].y); paint.lineTo(points[b].x, points[b].y); paint.stroke();
+      }
+    }
+  }
+
+  const lead = leadPeerAt(tick);
+  for (const point of points) {
+    if (point.id === lead) {
+      paint.strokeStyle = "#ffffff"; paint.lineWidth = Math.max(1, sx * 0.3);
+      paint.beginPath(); paint.arc(point.x, point.y, sx * 1.7, 0, Math.PI * 2); paint.stroke();
+    }
+    paint.fillStyle = point.color;
+    paint.beginPath(); paint.arc(point.x, point.y, sx * (point.moving ? 1.05 : 0.8), 0, Math.PI * 2); paint.fill();
+  }
+}
+
+// ---- Telemetry ------------------------------------------------------------
+const TICK_SIM_SECONDS = 5;   // one algorithm tick is five simulated seconds
+
+function updateTelemetry(tick: number) {
+  const now = Math.max(1, Math.min(Math.floor(tick), scenario.duration));
+  let moving = 0, carried = 0, metres = 0, battery = 0, fastest = 0;
+  const positions: [number, number][] = [];
+  for (const trace of scenario.robots) {
+    const frames = trace.frames;
+    const here = frames[Math.min(now, frames.length - 1)];
+    const before = frames[Math.min(now - 1, frames.length - 1)];
+    const step = Math.hypot(here.x - before.x, here.z - before.z);
+    if (step > 1e-6) moving++;
+    if (here.load) carried++;
+    metres += step;
+    fastest = Math.max(fastest, step / TICK_SIM_SECONDS);
+    battery += here.battery;
+    positions.push([here.x, here.z]);
+  }
+  const count = scenario.robots.length || 1;
+  let separation = Infinity;
+  for (let a = 0; a < positions.length; a++)
+    for (let b = a + 1; b < positions.length; b++)
+      separation = Math.min(separation, Math.hypot(positions[a][0]-positions[b][0], positions[a][1]-positions[b][1]));
+  const done = scenario.events.filter(e => e.kind === "task_completed" && e.tick <= now).length;
+  const orders = new Set(scenario.events.filter(e => e.kind === "task_announced").map(e => e.entityId)).size || 1;
+  const refusals = scenario.events.filter(e => e.kind === "plan_conflict_rejected" && e.tick <= now).length;
+  const requeues = scenario.events.filter(e => e.kind === "task_requeued" && e.tick <= now).length;
+  const epoch = scenario.events
+    .filter(e => e.kind === "task_awarded" && e.tick <= now)
+    .reduce((top, e) => Math.max(top, Number(e.data.auction_epoch ?? 0)), 0);
+
+  const cells = [
+    ["fleet velocity", `${(metres / count / TICK_SIM_SECONDS).toFixed(2)}<small> m/s</small>`],
+    ["peak velocity", `${fastest.toFixed(2)}<small> m/s</small>`],
+    ["min separation", `${(separation === Infinity ? 0 : separation).toFixed(1)}<small> m</small>`],
+    ["in motion", `${moving}<small> / ${count}</small>`],
+    ["payloads held", `${carried}`],
+    ["auction epoch", `#${epoch}`],
+  ].map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
+  const grid = q("#tel-grid");
+  if (grid.dataset.markup !== cells) { grid.dataset.markup = cells; grid.innerHTML = cells; }
+
+  const bars = [
+    ["throughput", done / orders, `${done}/${orders}`, "#64efb0"],
+    ["utilisation", moving / count, `${Math.round(moving / count * 100)}%`, "#78e5ff"],
+    ["charge", battery / count, `${Math.round(battery / count * 100)}%`, "#ffcf63"],
+  ].map(([label, ratio, text, tone]) =>
+    `<div><span>${label}</span><i><b style="width:${Math.round(Math.min(1, Number(ratio)) * 100)}%;background:${tone}"></b></i><span>${text}</span></div>`).join("");
+  const barHost = q("#tel-bars");
+  if (barHost.dataset.markup !== bars) { barHost.dataset.markup = bars; barHost.innerHTML = bars; }
+
+  q("#tel-foot").textContent =
+    `t=${now}/${scenario.duration} · sim ${(now * TICK_SIM_SECONDS / 60).toFixed(1)}min · ` +
+    `${refusals} plan refusal${refusals === 1 ? "" : "s"} · ${requeues} requeued · 0 executed conflicts`;
+}
+
+function updateInterface(tick: number) {
+  renderCasePanel();
+  updateEventFeed(tick);
+  updateMinimap(tick);
+  updateTelemetry(tick);
+}
 
 function frameAt(trace: RobotTrace, tick: number): [Frame, Frame, number] {
   const low=Math.max(0,Math.min(trace.frames.length-1,Math.floor(tick)));
@@ -1193,7 +1555,7 @@ function updateWorld(tick: number) {
 function updateRoutes(tick: number) {
   clearRouteOverlays();
   const start=Math.floor(tick);
-  const lead = String(scenario.events.find(event => event.kind === "task_awarded")?.data.robot_id ?? "robot_09");
+  const lead = leadPeerAt(tick);
   const importantRoutes = scenario.id === "peer-network"
     ? [lead]
     : scenario.id === "conflict-resolution"
@@ -1442,3 +1804,8 @@ async function start(){
 }
 
 start().catch(error=>{console.error(error);q("#loading-status").textContent="Could not load the digital twin — check the console"});
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    renderer.setAnimationLoop(null);
+  });
+}

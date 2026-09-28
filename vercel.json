@@ -19,11 +19,36 @@
       "entrypoint": "api/index.py"
     }
   },
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/sih/presentation",
+      "permanent": false
+    }
+  ],
   "rewrites": [
+    {
+      "source": "/sih/presentation/api/(.*)",
+      "destination": {
+        "service": "simulator"
+      }
+    },
     {
       "source": "/api/(.*)",
       "destination": {
         "service": "simulator"
+      }
+    },
+    {
+      "source": "/sih/presentation",
+      "destination": {
+        "service": "presentation"
+      }
+    },
+    {
+      "source": "/sih/presentation/(.*)",
+      "destination": {
+        "service": "presentation"
       }
     },
     {
@@ -35,19 +60,19 @@
   ],
   "headers": [
     {
-      "source": "/models/(.*)",
+      "source": "/(.*)models/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
-      "source": "/data/(.*)",
+      "source": "/(.*)data/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
       ]
     },
     {
-      "source": "/assets/(.*)",
+      "source": "/(.*)assets/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]

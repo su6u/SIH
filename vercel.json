@@ -19,36 +19,33 @@
       "entrypoint": "api/index.py"
     }
   },
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "/sih/presentation",
-      "permanent": false
-    }
-  ],
   "rewrites": [
     {
       "source": "/sih/presentation/api/(.*)",
       "destination": {
-        "service": "simulator"
+        "service": "simulator",
+        "path": "/api/$1"
       }
     },
     {
       "source": "/api/(.*)",
       "destination": {
-        "service": "simulator"
+        "service": "simulator",
+        "path": "/api/$1"
       }
     },
     {
       "source": "/sih/presentation",
       "destination": {
-        "service": "presentation"
+        "service": "presentation",
+        "path": "/"
       }
     },
     {
       "source": "/sih/presentation/(.*)",
       "destination": {
-        "service": "presentation"
+        "service": "presentation",
+        "path": "/$1"
       }
     },
     {
